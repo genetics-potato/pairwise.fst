@@ -71,19 +71,22 @@ Hobs 3 = 500/1000 = 0.5
 
 **Step 4.  Calculate the local expected heterozygosity, or gene diversity, of each subpopulation** (modified version of Eqn 35.1):
 
-> Eqns FST.2
+> **Eqns FST.2**
 >
 > ![](./H_exp1.png)
 > ![](./H_exp2.png)
 > ![](./H_exp3.png)
-> 
-(With two alleles it would actually be easier to use 2pq than to use the summation format of Eqn 33.1)
+>
+> (With two alleles it would actually be easier to use 2pq than to use the summation format of Eqn 33.1)
 
 **Notation**: Note that I am using ``p1`` and ``q1`` here (where the subscripts refer to subpopulations 1 through 3). We would need to use multiple subscripts if we were using the notation of Eqn 35.1 where the alleles are pi  (and the i refer to alleles 1 to k).  Indeed, with real multi-locus multipopulation data, we would have a triple summation and three subscripts;  one for alleles (i =1 to k), one for the loci (l =1 tom), and one for subpopulations (s = 1 to n).
 
 **Step 5.  Calculate the local inbreeding coefficient of each subpopulation** (same as Eqn 35.4, except that we are subscripting for the subpopulations):
 
-FS           where s (s = 1 to 3) refers to the subpopulation                Eqn FST.3
+> **Eqn FST.3**
+>
+> ![](./Fs.png)
+> where s (s = 1 to 3) refers to the subpopulation
 
 ```
 F1 = (0.5 - 0.5) / 0.5       =  0
@@ -93,34 +96,42 @@ F3 = (0.455 — 0.5) / 0.455   = -0.099       [negative F means more heterozygot
 
 **Step 6. Calculate ``p`` (p-bar, the frequency of allele A) over the total population.**
 [Note that if we had more alleles we could put this and Step 7 all together as a single "global gene frequencies" step, or have one for each allele frequency].
-              {genotype splitting method}
-  
+
+```
+(2*125+250+2*50+30+2*100+500)/(1000+200+2000)=0.4156  {genotype splitting method}
+```
 or (yields same answer)
-                   {using Eqn FST.1 values for ps}   
-              Note that we weight by population size
+```
+(0.5*1000+0.65*200+0.35*2000)/(1000+200+2000)=0.4156  {using Eqn FST.1 values for ps}
+```
+
+Note that we weight by **population size**
 
 **Step 7.  Calculate ``q`` (q-bar, the frequency of allele a) over the total population**
 
+```
+(2*125+250+2*20+30+2*400+500)/(1000+200+2000)=0.5844
+```
 Check: ``p-bar + q-bar = 0.4156 + 0.5844 = 1.0`` (as required by Eqn 31.1).
 The check doesn't guarantee that our result is correct, but if they don't sum to one, we know we miscalculated.
 
-**Step 8.  Calculate the global heterozygosity indices (over Individuals, Subpopulations and Total population)**
+**Step 8.  Calculate the global heterozygosity indices (over _I_ndividuals, _S_ubpopulations and _T_otal population)**
 Note that the first two calculations employ a weighted average of the values in the whole set of subpopulations.
 
-HI based on observed   heterozygosities in individuals in subpopulations 
+``HI`` based on **observed** heterozygosities in **individuals** in subpopulations
 
 HI                                Eqn FST.4
 
-HS based on expected heterozygosities   in subpopulations
+``HS`` based on **expected** heterozygosities in **subpopulations**
 
       HS                     Eqn FST.5
 
-HT based on expected heterozygosities for       overall total population (using global allele frequencies and a modified form of Eqn 35.1): 
+``HT`` based on **expected** heterozygosities for overall total population (using global allele frequencies and a modified form of Eqn 35.1):
 
   
 HTcalc                                 Eqn FST.6         
 
-            or we could calculate it as      2*p-bar *q-bar   = 2 * 0.4156 * 0.5844  = 0.4858
+or we could calculate it as ``2*p-bar *q-bar   = 2 * 0.4156 * 0.5844  = 0.4858``
 
 **Step 9.  CALCULATE THE GLOBAL ``F-STATISTICS``**
 Compare and contrast the global FISbelow with the "local inbreeding coefficient" Fs of Step 5.
