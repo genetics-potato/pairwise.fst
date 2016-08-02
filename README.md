@@ -140,16 +140,23 @@ Note that the first two calculations employ a weighted average of the values in 
 or we could calculate it as ``2*p-bar *q-bar   = 2 * 0.4156 * 0.5844  = 0.4858``
 
 **Step 9.  CALCULATE THE GLOBAL ``F-STATISTICS``**
-Compare and contrast the global FISbelow with the "local inbreeding coefficient" Fs of Step 5.
+Compare and contrast the global FISbelow with the "local inbreeding coefficient" ``Fs`` of Step 5.
 Here we are using a weighted average of the individual heterozygosities over all the subpopulations.
-Both FIS and  Fs are, however, based on the observed heterozygosities,
-        whereas FST and FIT are based   on expected heterozygosities.
-FIScalc                                                    Eqn FST.7
+Both ``FIS`` and ``Fs`` are, however, based on the ``observed`` heterozygosities, whereas ``FST`` and ``FIT`` are based   on expected heterozygosities.
 
-FSTcalc                                                Eqn FST.8
-FITcalc                                              Eqn FST.9   
+> **Eqn FST.7**
+>
+> ![](./FIS.png)
+>
+> **Eqn FST.8**
+>
+> ![](./FST.png)
+>
+> **Eqn FST.9**
+>
+> ![](./FIT.png)
 
-**Notation note**: the subscripts I, S, and T are not summation subscripts.  They simply indicate the level of our analysis.  Likewise, the s onFs in Step 5 or on the ps in Step 1 (the s was implicit there) just tell us what we are referring to.  In contrast, the subscripts for Eqn 35.1 and 35.2 are used in summations and change as we work through the pieces of the calculation.
+**Notation note**: the subscripts I, S, and T are not summation subscripts. They simply indicate the level of our analysis.  Likewise, the s onFs in Step 5 or on the ps in Step 1 (the s was implicit there) just tell us what we are referring to. In contrast, the subscripts for ``Eqn 35.1`` and 35.2 are used in summations and change as we work through the pieces of the calculation.
 
 **Step 10.  Finally, draw some conclusions about the genetic structure of the population and its subpopulations**.
 
