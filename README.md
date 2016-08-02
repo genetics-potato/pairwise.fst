@@ -1,12 +1,4 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
-$$x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}$$
-
-# pairwise.fst
-pairwise.fst calculation tools
-
-
-## Worked example of calculating F-statistics from genotypic data
+# Calculating F-statistics from genotypic data
 
 > source: [Population Ecology, ZOO 4400/5400, Spring 2013](http://www.uwyo.edu/dbmcd/popecol/index.html)
 
@@ -81,6 +73,10 @@ Hobs 3 = 500/1000 = 0.5
 
 > Eqns FST.2
 >
+> ![](./H_exp1.png)
+> ![](./H_exp2.png)
+> ![](./H_exp3.png)
+> 
 (With two alleles it would actually be easier to use 2pq than to use the summation format of Eqn 33.1)
 
 **Notation**: Note that I am using ``p1`` and ``q1`` here (where the subscripts refer to subpopulations 1 through 3). We would need to use multiple subscripts if we were using the notation of Eqn 35.1 where the alleles are pi  (and the i refer to alleles 1 to k).  Indeed, with real multi-locus multipopulation data, we would have a triple summation and three subscripts;  one for alleles (i =1 to k), one for the loci (l =1 tom), and one for subpopulations (s = 1 to n).
