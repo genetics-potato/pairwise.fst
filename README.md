@@ -86,12 +86,13 @@ Hobs 3 = 500/1000 = 0.5
 > **Eqn FST.3**
 >
 > ![](./Fs.png)
+>
 > where s (s = 1 to 3) refers to the subpopulation
 
 ```
 F1 = (0.5 - 0.5) / 0.5       =  0
-F2 = (0.455 - 0.3) / 0.455   =  0.341       [positive F means fewer heterozygotes than expected indicates inbreeding]
-F3 = (0.455 — 0.5) / 0.455   = -0.099       [negative F means more heterozygotes than expected means excess outbreeding]
+F2 = (0.455 - 0.3) / 0.455   =  0.341  [positive F means fewer heterozygotes than expected indicates inbreeding]
+F3 = (0.455 — 0.5) / 0.455   = -0.099  [negative F means more heterozygotes than expected means excess outbreeding]
 ```
 
 **Step 6. Calculate ``p`` (p-bar, the frequency of allele A) over the total population.**
@@ -115,21 +116,26 @@ Note that we weight by **population size**
 Check: ``p-bar + q-bar = 0.4156 + 0.5844 = 1.0`` (as required by Eqn 31.1).
 The check doesn't guarantee that our result is correct, but if they don't sum to one, we know we miscalculated.
 
-**Step 8.  Calculate the global heterozygosity indices (over _I_ndividuals, _S_ubpopulations and _T_otal population)**
+**Step 8.  Calculate the global heterozygosity indices (over *I*ndividuals, *S*ubpopulations and *T*otal population)**
 Note that the first two calculations employ a weighted average of the values in the whole set of subpopulations.
 
 ``HI`` based on **observed** heterozygosities in **individuals** in subpopulations
 
-HI                                Eqn FST.4
+> **Eqn FST.4**
+>
+> ![](./HI.png)
 
 ``HS`` based on **expected** heterozygosities in **subpopulations**
 
-      HS                     Eqn FST.5
+> **Eqn FST.5**
+>
+> ![](./HS.png)
 
 ``HT`` based on **expected** heterozygosities for overall total population (using global allele frequencies and a modified form of Eqn 35.1):
 
-  
-HTcalc                                 Eqn FST.6         
+> **Eqn FST.6**
+>
+> ![](./HT.png)
 
 or we could calculate it as ``2*p-bar *q-bar   = 2 * 0.4156 * 0.5844  = 0.4858``
 
