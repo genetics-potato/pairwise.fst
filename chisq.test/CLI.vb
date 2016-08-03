@@ -13,6 +13,7 @@ Module CLI
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".snp.genotype.chisq.test.csv")
         Dim genotypes As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
         Dim result = TestMatrix.chisqTest(genotypes).ToArray
-        Return result.GetJson.SaveTo(out).CLICode
+        Call result.MatrixView(genotypes, [in].BaseName).Save(out, Encodings.ASCII)
+        Return result.GetJson.SaveTo(out.TrimSuffix & ".json").CLICode
     End Function
 End Module
