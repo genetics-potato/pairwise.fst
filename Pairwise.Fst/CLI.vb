@@ -46,4 +46,17 @@ Module CLI
         Dim result As New F_STATISTICS(array)
         Return result.GetJson.SaveTo(out).CLICode
     End Function
+
+    <ExportAPI("/SNP.fst",
+               Usage:="/SNP.fst /in <snp.genotype.Csv> [/out <out.json>]")>
+    <ParameterInfo("/in", False, AcceptTypes:={GetType(SNPGenotype)})>
+    <ParameterInfo("/out", True, AcceptTypes:={GetType(F_STATISTICS)})>
+    Public Function SNPFst(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".snp_fst.json")
+        Dim data As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
+        Dim array As Population() = data.ToArray(Function(x) New Population(x))
+        Dim result As New F_STATISTICS(array)
+        Return result.GetJson.SaveTo(out).CLICode
+    End Function
 End Module

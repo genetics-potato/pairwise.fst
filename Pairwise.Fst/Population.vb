@@ -1,5 +1,6 @@
 ﻿Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Serialization.JSON
+Imports Microsoft.VisualBasic.Linq
 
 Public Class Population : Inherits ClassObject
 
@@ -111,6 +112,19 @@ Public Class Population : Inherits ClassObject
         Me.Genotype("AA") = pop.a
         Me.Genotype("Aa") = pop.b
         Me.Genotype("aa") = pop.c
+    End Sub
+
+    Sub New(snp As SNPGenotype)
+        Dim genes As Char() = snp.Frequency.ToArray(Function(x) x.base)
+        Dim a As Char = genes(0)
+        Dim b As Char = genes(1)
+
+        Me.Population = snp.Population
+        Me.Genotype = New Dictionary(Of String, Integer)
+
+        Me.Genotype("AA") = snp(a, a).Count
+        Me.Genotype("Aa") = snp(a, b).Count
+        Me.Genotype("aa") = snp(b, b).Count
     End Sub
 
     Public Overrides Function ToString() As String
