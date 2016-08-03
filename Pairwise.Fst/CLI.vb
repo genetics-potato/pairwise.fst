@@ -1,9 +1,11 @@
 ﻿Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.DocumentFormat.Csv
+Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
+Imports Microsoft.VisualBasic.Language
+Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
-Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
 
 Module CLI
 
@@ -85,5 +87,20 @@ Module CLI
             {NameOf(DataSet.Identifier), "population"}
         }
         Return result.SaveTo(out, maps:=maps).CLICode
+    End Function
+
+    <ExportAPI("/pairwise.snp.fst.batch",
+               Usage:="/pairwise.snp.fst.batch /in <snp.genotypes.csv.DIR> [/out <out.csv.DIR>]")>
+    Public Function pairwisefstSNPBatch(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim EXPORT As String = args.GetValue("/out", [in].TrimDIR & ".pairwise_snp.fst/")
+        Dim CLI As String() = LinqAPI.Exec(Of String) <=
+ _
+            From path As String
+            In ls - l - wildcards("*.csv") <= [in]
+            Let out As String = EXPORT & "/" & path.BaseName & ".Csv"
+            Select $"{GetType(CLI).API(NameOf(pairwisefst_SNP))} /in {path.CliPath} /out {out.CliPath}"
+
+        Return App.SelfFolks(CLI, 32)
     End Function
 End Module
