@@ -59,6 +59,8 @@ Public Module Fst
 
     <Extension>
     Public Function HT(pops As IEnumerable(Of Population)) As Double
-        Return 1 - (pops.pA + pops.qa)
+        Dim p As Double = pops.pA
+        Dim q As Double = pops.qa
+        Return 1 - (p ^ 2 + q ^ 2)
     End Function
 End Module
