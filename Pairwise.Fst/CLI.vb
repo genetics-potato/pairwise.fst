@@ -3,6 +3,7 @@ Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.DocumentFormat.Csv
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
+Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
 
 Module CLI
 
@@ -58,5 +59,18 @@ Module CLI
         Dim array As Population() = data.ToArray(Function(x) New Population(x))
         Dim result As New F_STATISTICS(array)
         Return result.GetJson.SaveTo(out).CLICode
+    End Function
+
+    <ExportAPI("/pairwise.fst", Usage:="/pairwise.fst /in <in.csv> [/out <out.csv>]")>
+    Public Function pairwisefst(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".pairwise_fst.csv")
+        Dim data As IEnumerable(Of FstPop) = [in].LoadCsv(Of FstPop)
+        Dim array As Population() = data.ToArray(Function(x) New Population(x))
+        Dim result As IEnumerable(Of DataSet) = F_STATISTICS.PairwiseFst(array)
+        Dim maps As New Dictionary(Of String, String) From {
+            {NameOf(DataSet.Identifier), "population"}
+        }
+        Return result.SaveTo(out, maps:=maps).CLICode
     End Function
 End Module
