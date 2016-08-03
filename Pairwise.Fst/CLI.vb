@@ -73,4 +73,17 @@ Module CLI
         }
         Return result.SaveTo(out, maps:=maps).CLICode
     End Function
+
+    <ExportAPI("/pairwise.snp.fst", Usage:="/pairwise.snp.fst /in <snp.genotypes.csv> [/out <out.csv>]")>
+    Public Function pairwisefst_SNP(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".pairwise_snp.fst.csv")
+        Dim data As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
+        Dim array As Population() = data.ToArray(Function(x) New Population(x))
+        Dim result As IEnumerable(Of DataSet) = F_STATISTICS.PairwiseFst(array)
+        Dim maps As New Dictionary(Of String, String) From {
+            {NameOf(DataSet.Identifier), "population"}
+        }
+        Return result.SaveTo(out, maps:=maps).CLICode
+    End Function
 End Module
