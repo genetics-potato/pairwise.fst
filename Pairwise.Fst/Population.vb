@@ -117,7 +117,11 @@ Public Class Population : Inherits ClassObject
     Sub New(snp As SNPGenotype)
         Dim genes As Char() = snp.Frequency.ToArray(Function(x) x.base)
         Dim a As Char = genes(0)
-        Dim b As Char = genes(1)
+        Dim b As Char = genes.Get(1)
+
+        If b = Nothing OrElse b = NIL Then
+            b = "x"c
+        End If
 
         Me.Population = snp.Population
         Me.Genotype = New Dictionary(Of String, Integer)
