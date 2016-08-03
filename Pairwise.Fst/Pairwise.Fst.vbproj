@@ -73,6 +73,7 @@
     <Compile Include="FstPop.vb" />
     <Compile Include="Fst.vb" />
     <Compile Include="F-STATISTICS.vb" />
+    <Compile Include="Genotype.vb" />
     <Compile Include="Population.vb" />
     <Compile Include="CLI.vb" />
     <Compile Include="Program.vb" />
