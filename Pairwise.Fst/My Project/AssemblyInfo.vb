@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("Pairwise.Fst")>
-<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyDescription("Calculating F-statistics from genotypic data")>
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("Pairwise.Fst")>
 <Assembly: AssemblyCopyright("Copyright ©  2016")>

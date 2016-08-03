@@ -69,6 +69,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fst.vb" />
+    <Compile Include="F-STATISTICS.vb" />
+    <Compile Include="Population.vb" />
     <Compile Include="CLI.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
