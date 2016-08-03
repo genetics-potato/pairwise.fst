@@ -104,6 +104,15 @@ Public Class Population : Inherits ClassObject
         Me.Genotype("aa") = genotype(2)
     End Sub
 
+    Sub New(pop As FstPop)
+        Me.Population = pop.Population
+        Me.Genotype = New Dictionary(Of String, Integer)
+
+        Me.Genotype("AA") = pop.a
+        Me.Genotype("Aa") = pop.b
+        Me.Genotype("aa") = pop.c
+    End Sub
+
     Public Overrides Function ToString() As String
         Return Me.GetJson
     End Function
