@@ -63,6 +63,7 @@ End Module
 Public Class SNPGenotype
 
     Public Property Population As String
+    Public Property ssID As String
 
     <Column("Allele: frequency (count)")>
     Public Property AlleleFrequency As String

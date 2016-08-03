@@ -126,6 +126,10 @@ Public Class Population : Inherits ClassObject
         Me.Population = snp.Population
         Me.Genotype = New Dictionary(Of String, Integer)
 
+        If Not String.IsNullOrEmpty(snp.ssID) Then
+            Population &= "-" & snp.ssID
+        End If
+
         Me.Genotype("AA") = snp(a, a).Count
         Me.Genotype("Aa") = snp(a, b).Count
         Me.Genotype("aa") = snp(b, b).Count
