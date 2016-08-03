@@ -128,6 +128,18 @@ Public Class SNPGenotype
     Public ReadOnly Property Frequency As Frequency()
     Public ReadOnly Property Genotypes As Frequency()
 
+    Public Sub GetAllele(ByRef x As Char, ByRef y As Char)
+        Dim als As Char() = Frequency.ToArray(Function(o) o.base)
+
+        x = als(Scan0)
+
+        If als.Length = 2 Then
+            y = als(1)
+        Else
+            y = "x"c
+        End If
+    End Sub
+
     Public Overrides Function ToString() As String
         Return Me.GetJson
     End Function
