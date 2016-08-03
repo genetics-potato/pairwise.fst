@@ -8,7 +8,7 @@ Imports Pairwise.Fst
 Module CLI
 
     <ExportAPI("/snp.genotype.chisq.test",
-               Usage:="/snp.genotype.chisq.test /in <snp.genotypes.csv> [/out <out.json>]")>
+               Usage:="/snp.genotype.chisq.test /in <snp.genotypes.csv> [/out <out.csv>]")>
     Public Function SNP_genotypeChisqTest(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".snp.genotype.chisq.test.csv")
@@ -27,8 +27,8 @@ Module CLI
         Dim cmd As String = GetType(CLI).API(NameOf(SNP_genotypeChisqTest))
 
         For Each snp As String In ls - l - r - wildcards("*.csv") <= [in]
-            Dim out As String = EXPORT & snp.BaseName & ".json"
-            Call App.SelfFolk($"{cmd} /in {snp.CliPath} /out {out.CliPath}")
+            Dim out As String = EXPORT & snp.BaseName & ".csv"
+            Call App.SelfFolk($"{cmd} /in {snp.CliPath} /out {out.CliPath}").Run()
         Next
 
         Return 0
