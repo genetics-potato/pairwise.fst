@@ -23,7 +23,7 @@ Module CLI
     Public Function Batch_chisqTest(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim EXPORT As String =
-            args.GetValue("/out", [in].TrimSuffix & ".snp.genotype_chisq.test/")
+            args.GetValue("/out", [in].TrimDIR & ".snp.genotype_chisq.test/")
         Dim cmd As String = GetType(CLI).API(NameOf(SNP_genotypeChisqTest))
 
         For Each snp As String In ls - l - r - wildcards("*.csv") <= [in]
@@ -44,6 +44,22 @@ Module CLI
         For Each df As DocumentStream.File In TestMatrix.pairWise_chisqTest(genotypes)
             Dim out As String = EXPORT & "/" & df.FilePath & ".Csv"
             Call df.Save(out, Encodings.ASCII)
+        Next
+
+        Return 0
+    End Function
+
+    <ExportAPI("/snp.genotype.chisq.test.pairwise.batch",
+           Usage:="/snp.genotype.chisq.test.pairwise.batch /in <in.DIR> [/out <out.Csv>]")>
+    Public Function Batch_chisqTest_pairwise(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim EXPORT As String =
+            args.GetValue("/out", [in].TrimDIR & ".snp.genotype_chisq.test_pairwise/")
+        Dim cmd As String = GetType(CLI).API(NameOf(SNP_genotypeChisqTest_pairwise))
+
+        For Each snp As String In ls - l - r - wildcards("*.csv") <= [in]
+            Dim out As String = EXPORT & snp.BaseName
+            Call App.SelfFolk($"{cmd} /in {snp.CliPath} /out {out.CliPath}").Run()
         Next
 
         Return 0
