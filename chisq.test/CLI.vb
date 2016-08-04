@@ -33,4 +33,19 @@ Module CLI
 
         Return 0
     End Function
+
+    <ExportAPI("/snp.genotype.chisq.test.pairwise",
+               Usage:="/snp.genotype.chisq.test.pairwise /in <snp.genotypes.csv> [/out <out.csv.DIR>]")>
+    Public Function SNP_genotypeChisqTest_pairwise(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim EXPORT As String = args.GetValue("/out", [in].TrimSuffix & ".snp.genotype.chisq.test/")
+        Dim genotypes As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
+
+        For Each df As DocumentStream.File In TestMatrix.pairWise_chisqTest(genotypes)
+            Dim out As String = EXPORT & "/" & df.FilePath & ".Csv"
+            Call df.Save(out, Encodings.ASCII)
+        Next
+
+        Return 0
+    End Function
 End Module

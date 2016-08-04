@@ -16,6 +16,27 @@ Imports RDotNET.Extensions.VisualBasic.stats
 Public Module TestMatrix
 
     <Extension>
+    Public Iterator Function pairWise_chisqTest(data As IEnumerable(Of SNPGenotype)) As IEnumerable(Of DocumentStream.File)
+        For Each x As SNPGenotype In data
+            Dim out As New DocumentStream.File With {
+                .FilePath = x.Population.NormalizePathString(True)
+            }
+
+            For Each y As SNPGenotype In data
+                Dim array As SNPGenotype() = {x, y}
+                Dim result = TestMatrix.chisqTest(array).ToArray
+                Dim name As String = x.Population.Split(":"c).Last & "__vs_" & y.Population.Split(":"c).Last
+                Dim df As DocumentStream.File = result.MatrixView(array, name)
+
+                out.Append(df)
+                out.AppendLine()
+            Next
+
+            Yield out
+        Next
+    End Function
+
+    <Extension>
     Public Iterator Function chisqTest(data As IEnumerable(Of SNPGenotype)) As IEnumerable(Of NamedValue(Of chisqTestResult))
         Dim a As Char = Nothing, b As Char = Nothing
         Dim array As SNPGenotype() = data.ToArray
