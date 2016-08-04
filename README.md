@@ -1,3 +1,13 @@
+### Development Dependence
+
+After the clone of this CLI tools repository, two library was required for this tools source code reference:
+
++ Microsoft CLI App runtime for VisualBasic
+    + https://github.com/xieguigang/VisualBasic_AppFramework
++ R.NET bioinformatics SDK
+    + https://github.com/SMRUCC/R.Bioinformatics
+
+
 # Calculating F-statistics from genotypic data
 
 > source: [Population Ecology, ZOO 4400/5400, Spring 2013](http://www.uwyo.edu/dbmcd/popecol/index.html)
