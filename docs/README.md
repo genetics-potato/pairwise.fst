@@ -1,5 +1,5 @@
 # Pairwise.Fst [version 1.0.0.0]
-**Module AssemblyName**: file:///G:/pairwise.fst/Pairwise.Fst/bin/Release/fst.exe
+**Module AssemblyName**: file:///G:/pairwise.fst/chisq.test/bin/x64/Release/fst.exe
 **Root namespace**: Pairwise.Fst.CLI
 
 
@@ -21,7 +21,7 @@ All of the command that available in this program has been list below:
 
 ```
   Information:  
-  Usage:        G:\pairwise.fst\Pairwise.Fst\bin\Release\fst.exe /fst /in <genotype.Csv> [/out <out.json>]
+  Usage:        G:\pairwise.fst\chisq.test\bin\x64\Release\fst.exe /fst /in <genotype.Csv> [/out <out.json>]
   Example:      fst /fst 
 ```
 
@@ -70,7 +70,7 @@ Example:
 
 ```
   Information:  
-  Usage:        G:\pairwise.fst\Pairwise.Fst\bin\Release\fst.exe /pairwise.fst /in <in.csv> [/out <out.csv>]
+  Usage:        G:\pairwise.fst\chisq.test\bin\x64\Release\fst.exe /pairwise.fst /in <in.csv> [/out <out.csv>]
   Example:      fst /pairwise.fst 
 ```
 
@@ -80,7 +80,7 @@ Example:
 
 ```
   Information:  
-  Usage:        G:\pairwise.fst\Pairwise.Fst\bin\Release\fst.exe /pairwise.snp.fst /in <snp.genotypes.csv> [/out <out.csv>]
+  Usage:        G:\pairwise.fst\chisq.test\bin\x64\Release\fst.exe /pairwise.snp.fst /in <snp.genotypes.csv> [/out <out.csv>]
   Example:      fst /pairwise.snp.fst 
 ```
 
@@ -90,7 +90,7 @@ Example:
 
 ```
   Information:  
-  Usage:        G:\pairwise.fst\Pairwise.Fst\bin\Release\fst.exe /pairwise.snp.fst.batch /in <snp.genotypes.csv.DIR> [/out <out.csv.DIR>]
+  Usage:        G:\pairwise.fst\chisq.test\bin\x64\Release\fst.exe /pairwise.snp.fst.batch /in <snp.genotypes.csv.DIR> [/out <out.csv.DIR>]
   Example:      fst /pairwise.snp.fst.batch 
 ```
 
@@ -100,7 +100,7 @@ Example:
 
 ```
   Information:  
-  Usage:        G:\pairwise.fst\Pairwise.Fst\bin\Release\fst.exe /SNP.fst /in <snp.genotype.Csv> [/out <out.json>]
+  Usage:        G:\pairwise.fst\chisq.test\bin\x64\Release\fst.exe /SNP.fst /in <snp.genotype.Csv> [/out <out.json>]
   Example:      fst /SNP.fst 
 ```
 
