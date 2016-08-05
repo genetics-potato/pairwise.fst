@@ -34,6 +34,7 @@ Imports Microsoft.VisualBasic.DocumentFormat.Csv
 Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
 Imports Microsoft.VisualBasic.DocumentFormat.Csv.StorageProvider.Reflection
 Imports Microsoft.VisualBasic.Language
+Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
 
@@ -86,7 +87,76 @@ Public Module Genotype
 
         Return out
     End Function
+
+    <Extension>
+    Public Iterator Function RegionViews([Imports] As String, Optional filters As IEnumerable(Of String) = Nothing) As IEnumerable(Of SNPRegionView)
+        For Each file As String In ls - l - r - wildcards("*.csv") < -[Imports]
+            Dim data As SNPGenotype() = file.LoadCsv(Of SNPGenotype)
+            Dim hash As Dictionary(Of String, SNPGenotype) =
+                data.ToDictionary(
+                    Function(x) If(Not String.IsNullOrEmpty(x.ssID),
+                    x.Population.Split(":"c).Last & "-" & x.ssID,
+                    x.Population.Split(":"c).Last))
+
+            Dim out As New SNPRegionView With {
+                .site = file.BaseName,
+                .Allele = data.__getAllele
+            }
+
+            If filters Is Nothing Then
+                filters = hash.Keys
+            End If
+
+            For Each key As String In filters
+                If hash.ContainsKey(key) Then
+                    out.regions.Add(key, hash(key).GenotypeFreqnency)
+                End If
+            Next
+
+            Yield out
+        Next
+    End Function
+
+    <Extension>
+    Private Function __getAllele(bufs As SNPGenotype()) As String
+        Dim a As Char = Nothing, b As Char = Nothing
+        Dim la As New List(Of Char)
+        Dim lb As New List(Of Char)
+
+        For Each x In bufs
+            Call x.GetAllele(a, b)
+            If a <> NIL AndAlso b <> NIL Then
+                Return $"{a}|{b}"
+            Else
+                la += a
+                lb += b
+            End If
+        Next
+
+        a = la.Where(Function(x) x <> Nothing AndAlso x <> NIL).FirstOrDefault
+        b = lb.Where(Function(x) x <> Nothing AndAlso x <> NIL).FirstOrDefault
+
+        If a = Nothing OrElse a = NIL Then
+            a = "X"c
+        End If
+        If b = Nothing OrElse b = NIL Then
+            b = "x"c
+        End If
+
+        Return $"{a}|{b}"
+    End Function
 End Module
+
+Public Class SNPRegionView
+
+    Public Property site As String
+    Public Property Allele As String
+    Public Property regions As Dictionary(Of String, String)
+
+    Public Overrides Function ToString() As String
+        Return Me.GetJson
+    End Function
+End Class
 
 Public Class SNPGenotype
 
