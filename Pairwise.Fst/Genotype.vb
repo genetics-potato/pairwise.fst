@@ -90,7 +90,7 @@ Public Module Genotype
 
     <Extension>
     Public Iterator Function RegionViews([Imports] As String, Optional filters As IEnumerable(Of String) = Nothing) As IEnumerable(Of SNPRegionView)
-        For Each file As String In ls - l - r - wildcards("*.csv") < -[Imports]
+        For Each file As String In ls - l - r - wildcards("*.csv") <= [Imports]
             Dim data As SNPGenotype() = file.LoadCsv(Of SNPGenotype)
             Dim hash As Dictionary(Of String, SNPGenotype) =
                 data.ToDictionary(
@@ -100,7 +100,8 @@ Public Module Genotype
 
             Dim out As New SNPRegionView With {
                 .site = file.BaseName,
-                .Allele = data.__getAllele
+                .Allele = data.__getAllele,
+                .regions = New Dictionary(Of String, String)
             }
 
             If filters Is Nothing Then
