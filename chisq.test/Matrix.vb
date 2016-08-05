@@ -36,6 +36,11 @@ Public Module TestMatrix
         Next
     End Function
 
+    ''' <summary>
+    ''' 函数所返回来的是 AA, Aa, aa的chisq.test的数据结果
+    ''' </summary>
+    ''' <param name="data"></param>
+    ''' <returns></returns>
     <Extension>
     Public Iterator Function chisqTest(data As IEnumerable(Of SNPGenotype)) As IEnumerable(Of NamedValue(Of chisqTestResult))
         Dim a As Char = Nothing, b As Char = Nothing
@@ -57,6 +62,16 @@ Public Module TestMatrix
             cv += x.obj(a, b).Count
             cv += n(x) - x.obj(a, b).Count
         Next
+
+        ' R script hybrids programming
+
+        ' mat <- c(cv);
+        ' mat <- matrix(mat, nrow=2);
+        '
+        ' # 判断这些数据是否存在差异
+        ' chisq.test{stats}
+        '
+        ' out <- chisq.test(mat);
 
         Dim out As chisqTestResult = stats.chisqTest(matrix(c(cv.ToArray), nrow:=2))
 
