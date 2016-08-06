@@ -93,7 +93,7 @@ Module CLI
                 .Identifier = file.BaseName
             }
 
-            For Each pair In combs
+            For Each pair As KeyValuePair(Of String, String) In combs
                 If Not hash.ContainsKey(pair.Key) OrElse
                     Not hash.ContainsKey(pair.Value) Then
                     Exit For
@@ -101,9 +101,9 @@ Module CLI
 
                 Dim result = {hash(pair.Key), hash(pair.Value)}.chisqTest.ToArray
 
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(AA)", result(0).x.pvalue)
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(Aa)", result(1).x.pvalue)
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(aa)", result(2).x.pvalue)
+                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(AA)", result(0).x.pvalue & $" ({result(0).x.statistic})")
+                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(Aa)", result(1).x.pvalue & $" ({result(1).x.statistic})")
+                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(aa)", result(2).x.pvalue & $" ({result(2).x.statistic})")
             Next
 
             If Not null Then
