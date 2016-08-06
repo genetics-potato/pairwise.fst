@@ -54,6 +54,17 @@ Public Module TestMatrix
         Yield array.__chisqTest(b, b, n)
     End Function
 
+    Public Function Allele_chisqTest(a As SNPGenotype, b As SNPGenotype) As chisqTestResult
+        Dim cv As New List(Of Integer)
+        Dim n As New Language.Value(Of Integer)
+
+        cv += {n = a.Frequency(Scan0).Count, a.Frequency.Select(Function(x) x.Count).Sum - CInt(n)}
+        cv += {n = b.Frequency(Scan0).Count, b.Frequency.Select(Function(x) x.Count).Sum - CInt(n)}
+
+        Dim out As chisqTestResult = stats.chisqTest(matrix(c(Of Integer)(cv), nrow:=2))
+        Return out
+    End Function
+
     <Extension>
     Private Function __chisqTest(array As SNPGenotype(), a As Char, b As Char, n As Integer()) As NamedValue(Of chisqTestResult)
         Dim cv As New List(Of Integer)
@@ -73,7 +84,7 @@ Public Module TestMatrix
         '
         ' out <- chisq.test(mat);
 
-        Dim out As chisqTestResult = stats.chisqTest(matrix(c(cv.ToArray), nrow:=2))
+        Dim out As chisqTestResult = stats.chisqTest(matrix(c(Of Integer)(cv), nrow:=2))
 
         Return New NamedValue(Of chisqTestResult) With {
             .Name = $"{a}/{b}",

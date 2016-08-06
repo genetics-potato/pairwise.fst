@@ -196,8 +196,22 @@ Public Class SNPGenotype
         End Get
     End Property
 
+    ''' <summary>
+    ''' Allele
+    ''' </summary>
+    ''' <returns></returns>
     Public ReadOnly Property Frequency As Frequency()
     Public ReadOnly Property Genotypes As Frequency()
+
+    Public Function GetAllele(c As Char) As Frequency
+        For Each x In Frequency
+            If x.base = c Then
+                Return x
+            End If
+        Next
+
+        Return New Frequency
+    End Function
 
     Public Sub GetAllele(ByRef x As Char, ByRef y As Char)
         Dim als As Char() = Frequency.ToArray(Function(o) o.base)
@@ -224,7 +238,7 @@ Public Class Frequency
     ''' <returns></returns>
     Public Property type As Char
     ''' <summary>
-    ''' 分母
+    ''' allele, 分母
     ''' </summary>
     ''' <returns></returns>
     Public Property base As Char

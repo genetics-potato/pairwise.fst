@@ -7,6 +7,7 @@ Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Pairwise.Fst
+Imports RDotNET.Extensions.VisualBasic.stats
 
 Module CLI
 
@@ -104,6 +105,53 @@ Module CLI
                 site.Properties.Add($"{pair.Key}__vs_{pair.Value}(AA)", result(0).x.pvalue & $" ({result(0).x.statistic})")
                 site.Properties.Add($"{pair.Key}__vs_{pair.Value}(Aa)", result(1).x.pvalue & $" ({result(1).x.statistic})")
                 site.Properties.Add($"{pair.Key}__vs_{pair.Value}(aa)", result(2).x.pvalue & $" ({result(2).x.statistic})")
+            Next
+
+            If Not null Then
+                output += site
+            End If
+        Next
+
+        Dim maps As New Dictionary(Of String, String) From {
+            {NameOf(EntityObject.Identifier), "sites/pops"}
+        }
+        Return output.SaveTo(out, maps:=maps).CLICode
+    End Function
+
+    <ExportAPI("/snp.allele.chisq.test.pairwise.region",
+   Usage:="/snp.allele.chisq.test.pairwise.region /in <in.DIR> /keys <key1,key2,key3,...> [/out <out.Csv>]")>
+    Public Function snp_allele_chisqTest_pairwise_regions(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim keys As String() = args("/keys").Split(","c)
+        Dim out As String = args.GetValue("/out", [in].TrimDIR & "-" & args("/keys").NormalizePathString & ".alleles.csv")
+        Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).MatrixToList
+        Dim output As New List(Of EntityObject)
+
+        ' output += {"site/pops"}.Join(combs.Select(Function(x) $"{x.Key}__vs_{x.Value}"))
+
+        For Each file As String In ls - l - r - wildcards("*.csv") <= [in]
+            Dim genotypes As IEnumerable(Of SNPGenotype) = file.LoadCsv(Of SNPGenotype)
+            Dim hash = (From x As SNPGenotype
+                        In genotypes
+                        Let key As String = x.Population.Split(":"c).Last
+                        Where Array.IndexOf(keys, key) > -1
+                        Select x,
+                            key).ToDictionary(Function(x) x.key,
+                                              Function(x) x.x)
+            Dim null As Boolean = False
+            Dim site As New EntityObject With {
+                .Identifier = file.BaseName
+            }
+
+            For Each pair As KeyValuePair(Of String, String) In combs  ' pops combination
+                If Not hash.ContainsKey(pair.Key) OrElse
+                    Not hash.ContainsKey(pair.Value) Then
+                    Exit For
+                End If
+
+                Dim result As chisqTestResult = Allele_chisqTest(hash(pair.Key), hash(pair.Value))
+
+                site.Properties.Add($"{pair.Key}__vs_{pair.Value}", $"{result.pvalue} ({result.statistic})")
             Next
 
             If Not null Then
