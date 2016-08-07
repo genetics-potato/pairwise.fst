@@ -4,6 +4,7 @@ Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.ComponentModel
 Imports Microsoft.VisualBasic.DocumentFormat.Csv
 Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
+Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Pairwise.Fst
@@ -39,7 +40,7 @@ Module CLI
     End Function
 
     <ExportAPI("/snp.genotype.chisq.test.pairwise",
-               Usage:="/snp.genotype.chisq.test.pairwise /in <snp.genotypes.csv> [/out <out.csv.DIR>]")>
+               Usage:="/snp.genotype.chisq.test.pairwise /in <snp.genotypes.csv> [/keys <-/key1,key2,key3,....> /out <out.csv.DIR>]")>
     Public Function SNP_genotypeChisqTest_pairwise(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim EXPORT As String = args.GetValue("/out", [in].TrimSuffix & ".snp.genotype.chisq.test/")
@@ -54,19 +55,21 @@ Module CLI
     End Function
 
     <ExportAPI("/snp.genotype.chisq.test.pairwise.batch",
-           Usage:="/snp.genotype.chisq.test.pairwise.batch /in <in.DIR> [/out <out.Csv.DIR>]")>
+           Usage:="/snp.genotype.chisq.test.pairwise.batch /in <in.DIR> [/keys <-/key1,key2,key3,....> /out <out.Csv.DIR>]")>
     Public Function Batch_chisqTest_pairwise(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim EXPORT As String =
             args.GetValue("/out", [in].TrimDIR & ".snp.genotype_chisq.test_pairwise/")
+        Dim keys As String = args.GetValue("/keys", "-")
         Dim cmd As String = GetType(CLI).API(NameOf(SNP_genotypeChisqTest_pairwise))
+        Dim CLI As String() = LinqAPI.Exec(Of String) <=
+ _
+            From snp As String
+            In ls - l - r - wildcards("*.csv") <= [in]
+            Let out As String = EXPORT & snp.BaseName
+            Select $"{cmd} /in {snp.CliPath} /out {out.CliPath} /keys {keys.CliToken}"
 
-        For Each snp As String In ls - l - r - wildcards("*.csv") <= [in]
-            Dim out As String = EXPORT & snp.BaseName
-            Call App.SelfFolk($"{cmd} /in {snp.CliPath} /out {out.CliPath}").Run()
-        Next
-
-        Return 0
+        Return App.SelfFolks(CLI, 32)
     End Function
 
     <ExportAPI("/snp.genotype.chisq.test.pairwise.region",

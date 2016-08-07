@@ -112,11 +112,25 @@ Module CLI
         Return result.SaveTo(out, maps:=maps).CLICode
     End Function
 
-    <ExportAPI("/pairwise.snp.fst", Usage:="/pairwise.snp.fst /in <snp.genotypes.csv> [/out <out.csv>]")>
+    <ExportAPI("/pairwise.snp.fst",
+               Usage:="/pairwise.snp.fst /in <snp.genotypes.csv> [/keys <-/key1,key2,key3,....> /out <out.csv>]")>
     Public Function pairwisefst_SNP(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".pairwise_snp.fst.csv")
         Dim data As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
+        Dim keys As String = args.GetValue("/keys", "-").CliToken
+
+        If keys <> "-" Then
+            Dim keyTokens As New List(Of String)(keys.Split(","c))
+            data = LinqAPI.Exec(Of SNPGenotype) <=
+ _
+                From x As SNPGenotype
+                In data
+                Let id As String = x.Population.Split(":"c).Last
+                Where keyTokens.IndexOf(id) > -1
+                Select x
+        End If
+
         Dim array As Population() = data.ToArray(Function(x) New Population(x))
         Dim result As IEnumerable(Of DataSet) = F_STATISTICS.PairwiseFst(array)
         Dim maps As New Dictionary(Of String, String) From {
@@ -126,16 +140,18 @@ Module CLI
     End Function
 
     <ExportAPI("/pairwise.snp.fst.batch",
-               Usage:="/pairwise.snp.fst.batch /in <snp.genotypes.csv.DIR> [/out <out.csv.DIR>]")>
+               Usage:="/pairwise.snp.fst.batch /in <snp.genotypes.csv.DIR> [/keys <-/key1,key2,key3,....> /out <out.csv.DIR>]")>
     Public Function pairwisefstSNPBatch(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim EXPORT As String = args.GetValue("/out", [in].TrimDIR & ".pairwise_snp.fst/")
+        Dim keys As String = args.GetValue("/keys", "-").CliToken
+        Dim api As String = GetType(CLI).API(NameOf(pairwisefst_SNP))
         Dim CLI As String() = LinqAPI.Exec(Of String) <=
  _
             From path As String
             In ls - l - wildcards("*.csv") <= [in]
             Let out As String = EXPORT & "/" & path.BaseName & ".Csv"
-            Select $"{GetType(CLI).API(NameOf(pairwisefst_SNP))} /in {path.CliPath} /out {out.CliPath}"
+            Select $"{api} /in {path.CliPath} /out {out.CliPath} /keys {keys}"
 
         Return App.SelfFolks(CLI, 32)
     End Function
