@@ -19,6 +19,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RDotNet", "..\R.Bioinformat
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RDotNET.Extensions.VisualBasic", "..\R.Bioinformatics\RDotNET.Extensions.VisualBasic\RDotNET.Extensions.VisualBasic.vbproj", "{AB6E71B0-1BE2-4418-AB4B-91D5554CF5A1}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "RDotNet.Extensions.Bioinformatics", "..\R.Bioinformatics\RDotNet.Extensions.Bioinformatics\RDotNet.Extensions.Bioinformatics.vbproj", "{485965CD-DA31-4517-86F6-94DFD28379C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,30 @@ Global
 		{AB6E71B0-1BE2-4418-AB4B-91D5554CF5A1}.Release|x64.Build.0 = Release|x64
 		{AB6E71B0-1BE2-4418-AB4B-91D5554CF5A1}.Release|x86.ActiveCfg = Release|x86
 		{AB6E71B0-1BE2-4418-AB4B-91D5554CF5A1}.Release|x86.Build.0 = Release|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Debug|x64.ActiveCfg = Debug|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Debug|x64.Build.0 = Debug|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Debug|x86.ActiveCfg = Debug|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Debug|x86.Build.0 = Debug|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.docs|Any CPU.ActiveCfg = docs|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.docs|Any CPU.Build.0 = docs|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.docs|x64.ActiveCfg = docs|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.docs|x64.Build.0 = docs|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.docs|x86.ActiveCfg = docs|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.docs|x86.Build.0 = docs|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Publish|Any CPU.ActiveCfg = Publish|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Publish|Any CPU.Build.0 = Publish|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Publish|x64.ActiveCfg = Publish|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Publish|x64.Build.0 = Publish|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Publish|x86.ActiveCfg = Publish|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Publish|x86.Build.0 = Publish|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Release|x64.ActiveCfg = Release|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Release|x64.Build.0 = Release|x64
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Release|x86.ActiveCfg = Release|x86
+		{485965CD-DA31-4517-86F6-94DFD28379C1}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -188,5 +214,6 @@ Global
 		{7283C179-F852-4EAD-8D8F-B82EF2CBD7DB} = {E8110E12-D45A-47C8-BA14-17C540A6BAC3}
 		{21C35138-455B-4833-9756-B2629F972A22} = {BDEDAAEE-FBAC-4A6A-855D-3C6BA2BF5C88}
 		{AB6E71B0-1BE2-4418-AB4B-91D5554CF5A1} = {BDEDAAEE-FBAC-4A6A-855D-3C6BA2BF5C88}
+		{485965CD-DA31-4517-86F6-94DFD28379C1} = {BDEDAAEE-FBAC-4A6A-855D-3C6BA2BF5C88}
 	EndGlobalSection
 EndGlobal

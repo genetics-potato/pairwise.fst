@@ -37,6 +37,11 @@ Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
+Imports RDotNET.Extensions.Bioinformatics
+Imports RDotNET.Extensions.VisualBasic
+Imports RDotNET.Extensions.VisualBasic.gplots
+Imports RDotNET.Extensions.VisualBasic.grDevices
+Imports RDotNET.Extensions.VisualBasic.utils.read.table
 
 Module CLI
 
@@ -215,5 +220,94 @@ Module CLI
 
         Return output.Save(out, Encodings.ASCII).CLICode
     End Function
+
+    <ExportAPI("/fst.heatmap", Usage:="/fst.heatmap /in <in.mat.Csv> [/width 4000 /height 3000 /colors <R_expr> /out <out.tiff>]")>
+    Public Function fstHeatmap(args As CommandLine) As Integer
+        Dim inSet As String = args("/in")
+        Dim out As String = args.GetValue("/out", inSet.TrimSuffix & ".heatmap.tiff")
+        Dim outDIR As String = out.ParentPath
+        Dim colors As String = args("/colors")
+        Dim width As Integer = args.GetValue("/width", 4000)
+        Dim height As Integer = args.GetValue("/height", 3000)
+        Dim hmapAPI As heatmap2 = heatmap2.Puriney
+
+        If Not String.IsNullOrEmpty(colors) Then
+            hmapAPI.col = colors
+        Else
+            hmapAPI.col = jetColors.BI_colors
+        End If
+
+        hmapAPI.scale = "column"
+
+        Dim hmap As New Heatmap With {
+            .dataset = New readcsv(inSet),
+            .heatmap = hmapAPI,
+            .image = New png(out, width, height)
+        }
+
+        Dim script As String = hmap.RScript
+
+        Call RServer.WriteLine(script)
+        Call script.SaveTo(outDIR & "/heatmap.r")
+        Call heatmap2OUT.RParser(hmap.output, hmap.locusId, hmap.samples).GetJson.SaveTo(outDIR & "/heatmap.output.json")
+
+        Dim matrix As DataSet() = DataSet.LoadDataSet(inSet).ToArray
+        Dim nodes As New List(Of node)
+
+        For Each row In matrix
+            nodes += New node With {
+                .name = row.Identifier,
+                .group = 1
+            }
+        Next
+
+        For Each key As String In matrix(Scan0).Properties.Keys
+            nodes += New node With {
+                .name = key,
+                .group = 2
+            }
+        Next
+
+        Dim nodesHash = nodes.SeqIterator.ToDictionary(Function(x) x.obj.name)
+        Dim links As New List(Of link)
+
+        For Each row In matrix
+            Dim source As Integer = nodesHash(row.Identifier).i
+
+            For Each p In row.Properties
+                links += New link With {
+                    .source = source,
+                    .target = nodesHash(p.Key).i,
+                    .value = p.Value
+                }
+            Next
+        Next
+
+        Call New net With {
+            .links = links.ToArray,
+            .nodes = nodes.ToArray
+        }.GetJson.SaveTo(outDIR & "/d3js.net.json")
+
+        Return 0
+    End Function
 End Module
 
+Public Class node
+    Public Property name As String
+    Public Property group As Integer
+End Class
+
+Public Class link
+    Public Property source As Integer
+    Public Property target As Integer
+    Public Property value As Double
+End Class
+
+Public Class net
+    Public Property nodes As node()
+    Public Property links As link()
+
+    Public Overrides Function ToString() As String
+        Return Me.GetJson
+    End Function
+End Class
