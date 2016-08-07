@@ -88,6 +88,12 @@ Public Module Genotype
         Return out
     End Function
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="[Imports]"><see cref="SNPGenotype"/></param>
+    ''' <param name="filters"></param>
+    ''' <returns></returns>
     <Extension>
     Public Iterator Function RegionViews([Imports] As String, Optional filters As IEnumerable(Of String) = Nothing) As IEnumerable(Of SNPRegionView)
         For Each file As String In ls - l - r - wildcards("*.csv") <= [Imports]

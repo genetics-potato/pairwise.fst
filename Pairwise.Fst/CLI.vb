@@ -158,6 +158,8 @@ Module CLI
 
     <ExportAPI("/SNP.region_views",
                Usage:="/SNP.region_views /in <in.DIR> [/filter <key1,key2,key3,...> /out <out.Csv>]")>
+    <ParameterInfo("/in", False, AcceptTypes:={GetType(SNPGenotype)})>
+    <ParameterInfo("/out", True, AcceptTypes:={GetType(SNPRegionView)})>
     Public Function SNPRegionView(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimDIR & ".SNP.region.Views.csv")
@@ -190,7 +192,8 @@ Module CLI
             If Array.IndexOf(keys, x.Identifier) > -1 Then
                 result += New EntityObject With {
                     .Identifier = x.Identifier,
-                    .Properties = keys.ToDictionary(Of String, String)(
+                    .Properties = keys.Where(AddressOf x.Properties.ContainsKey) _
+                    .ToDictionary(Of String, String)(
                         Function(k) k,
                         Function(k) x.Properties(k))
                 }
@@ -200,7 +203,7 @@ Module CLI
         Return result.ToArray
     End Function
 
-    <ExportAPI("/pairwise.Matrix",
+    <ExportAPI("/pairwise.Matrix", Info:="Processing the result from /pairwise.snp.fst",
                Usage:="/pairwise.Matrix /in <pairwise.matrix.DIR> /keys <key1,key2,key3,...> [/out <out.csv>]")>
     Public Function PairwiseMatrix(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
