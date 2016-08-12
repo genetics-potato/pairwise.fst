@@ -65,6 +65,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.vb" />
     <Compile Include="innatedb_curated_genes.vb" />
     <Compile Include="InnateDB_genes.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
