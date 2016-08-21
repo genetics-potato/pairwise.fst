@@ -133,6 +133,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\R.Bioinformatics\RDotNet.Extensions.Bioinformatics\RDotNet.Extensions.Bioinformatics.vbproj">
+      <Project>{485965CD-DA31-4517-86F6-94DFD28379C1}</Project>
+      <Name>RDotNet.Extensions.Bioinformatics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\R.Bioinformatics\RDotNET.Extensions.VisualBasic\RDotNET.Extensions.VisualBasic.vbproj">
       <Project>{ab6e71b0-1be2-4418-ab4b-91d5554cf5a1}</Project>
       <Name>RDotNET.Extensions.VisualBasic</Name>
