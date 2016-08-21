@@ -13,6 +13,7 @@ Imports RDotNet.Extensions.Bioinformatics.LDheatmap
 Imports RDotNet.Extensions.VisualBasic
 Imports RDotNet.Extensions.VisualBasic.grDevices
 Imports RDotNet.Extensions.VisualBasic.API.grDevices
+Imports Microsoft.VisualBasic.Serialization.JSON
 
 Partial Module CLI
 
@@ -72,27 +73,56 @@ Partial Module CLI
 
                 Call x.GetAllele(b, c)
 
-                If b = "x"c OrElse c = "x"c Then
-                    Continue For
+                If b = "x"c Then
+                    b = c
+                ElseIf c = "x"c Then
+                    c = b
                 End If
 
                 Dim tag As String = x.Population.Split(":"c).Last
-                ds(tag).Properties.Add(line.Name, $"{b}/{c}")
+                Dim bb = x.GetGenotype(b, b)
+                Dim bc = x.GetGenotype(b, c)
+                Dim cc = x.GetGenotype(c, c)
+                Dim g As String = $"{b}/{b}", max As Double = bb.Frequency
+
+                If bc.Frequency > max Then
+                    g = $"{b}/{c}"
+                    max = bc.Frequency
+                End If
+                If cc.Frequency > max Then
+                    g = $"{c}/{c}"
+                    max = cc.Frequency
+                End If
+
+                ds(tag).Properties.Add(line.Name, g)
             Next
         Next
 
         Return ds.Values.SaveTo(out).CLICode
     End Function
 
-    <ExportAPI("/LDheatmap", Usage:="/LDheatmap /in <raw.csv> [/out <outDIR>]")>
+    <ExportAPI("/LDheatmap", Usage:="/LDheatmap /in <raw.csv> [/out <outDIR> /width 2000 /height 2000]")>
     Public Function LDheatmap_CLI(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".LDheatmap/")
         Dim df As DocumentStream.File = DocumentStream.File.Load([in])
+        Dim ldm As LDheatmapS4Object
+        Dim w As Integer = args.GetValue("/width", 1600),
+            h As Integer = args.GetValue("/height", 1600)
+        Dim labels As String() = LinqAPI.Exec(Of String) <=
+ _
+            From cell As String
+            In df.First
+            Where cell <> NameOf(EntityObject.Identifier)
+            Select cell
 
         Call out.MkDIR
-        Call images.tiff(filename:=(out & "/ldheatmap.tiff").UnixPath, width:=1000, height:=1000)
-        Call LDheatmap(Bioinformatics.genetics.dataframe(df))
+        Call images.tiff(filename:=(out & "/ldheatmap.tiff").UnixPath, width:=w, height:=h)
+
+        ldm = LDheatmap(Bioinformatics.genetics.dataframe(df), LDmatrix:=out & "/LD_matrix.csv")
+        ldm.labels = labels
+        ldm.GetJson.SaveTo(out & "/ldheatmap_s4.json")
+
         Call dev.off()
 
         Return 0
