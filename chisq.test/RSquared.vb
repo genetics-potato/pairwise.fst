@@ -81,7 +81,7 @@ Partial Module CLI
             Next
         Next
 
-        Return ds.Values.SaveTo(out, metaBlank:="NA").CLICode
+        Return ds.Values.SaveTo(out).CLICode
     End Function
 
     <ExportAPI("/LDheatmap", Usage:="/LDheatmap /in <raw.csv> [/out <outDIR>]")>
@@ -90,8 +90,9 @@ Partial Module CLI
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".LDheatmap/")
         Dim df As DocumentStream.File = DocumentStream.File.Load([in])
 
-        Call images.tiff(filename:=(out & "/ldheatmap.tiff").UnixPath)
-        Dim result = LDheatmap(Bioinformatics.genetics.dataframe(df))
+        Call out.MkDIR
+        Call images.tiff(filename:=(out & "/ldheatmap.tiff").UnixPath, width:=8000, height:=8000)
+        Call LDheatmap(Bioinformatics.genetics.dataframe(df))
         Call dev.off()
 
         Return 0
