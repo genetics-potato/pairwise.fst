@@ -91,7 +91,7 @@ Partial Module CLI
         Dim df As DocumentStream.File = DocumentStream.File.Load([in])
 
         Call out.MkDIR
-        Call images.tiff(filename:=(out & "/ldheatmap.tiff").UnixPath, width:=8000, height:=8000)
+        Call images.tiff(filename:=(out & "/ldheatmap.tiff").UnixPath, width:=1000, height:=1000)
         Call LDheatmap(Bioinformatics.genetics.dataframe(df))
         Call dev.off()
 
