@@ -7,13 +7,13 @@ Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
 Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
+Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Pairwise.Fst
 Imports RDotNet.Extensions
 Imports RDotNet.Extensions.Bioinformatics.LDheatmap
 Imports RDotNet.Extensions.VisualBasic
-Imports RDotNet.Extensions.VisualBasic.grDevices
 Imports RDotNet.Extensions.VisualBasic.API.grDevices
-Imports Microsoft.VisualBasic.Serialization.JSON
+Imports RDotNet.Extensions.VisualBasic.grDevices
 
 Partial Module CLI
 
