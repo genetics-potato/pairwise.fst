@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="Matrix.vb" />
     <Compile Include="CLI.vb" />
+    <Compile Include="RSquared.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
