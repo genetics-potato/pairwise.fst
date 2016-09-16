@@ -38,10 +38,10 @@ Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports RDotNET.Extensions.Bioinformatics
-Imports RDotNET.Extensions.VisualBasic
-Imports RDotNET.Extensions.VisualBasic.gplots
-Imports RDotNET.Extensions.VisualBasic.grDevices
-Imports RDotNET.Extensions.VisualBasic.utils.read.table
+Imports RDotNET.Extensions.VisualBasic.API
+Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.gplots
+Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.grDevices
+Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.utils.read.table
 
 Module CLI
 
@@ -266,7 +266,10 @@ Module CLI
 
         Dim script As String = hmap.RScript
 
-        Call RServer.WriteLine(script)
+        With RDotNET.Extensions.VisualBasic.RSystem.R
+            .call = script
+        End With
+
         Call script.SaveTo(outDIR & "/heatmap.r")
         Call heatmap2OUT.RParser(hmap.output, hmap.locusId, hmap.samples).GetJson.SaveTo(outDIR & "/heatmap.output.json")
 

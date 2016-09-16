@@ -10,10 +10,9 @@ Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Pairwise.Fst
 Imports RDotNet.Extensions
-Imports RDotNet.Extensions.Bioinformatics.LDheatmap
-Imports RDotNet.Extensions.VisualBasic
+Imports RDotNET.Extensions.Bioinformatics.LDheatmap
 Imports RDotNet.Extensions.VisualBasic.API.grDevices
-Imports RDotNet.Extensions.VisualBasic.grDevices
+Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.grDevices
 
 Partial Module CLI
 

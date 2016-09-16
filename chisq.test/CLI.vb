@@ -8,7 +8,7 @@ Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Pairwise.Fst
-Imports RDotNET.Extensions.VisualBasic.stats
+Imports RDotNET.Extensions.VisualBasic.API
 
 Module CLI
 

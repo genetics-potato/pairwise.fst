@@ -5,10 +5,10 @@ Imports Microsoft.VisualBasic.DocumentFormat.Csv
 Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
 Imports Microsoft.VisualBasic.Linq
 Imports Pairwise.Fst
-Imports RDotNET.Extensions.VisualBasic
-Imports RDotNET.Extensions.VisualBasic.API.base
+Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.RScripts
 Imports RDotNET.Extensions.VisualBasic.API.utils
-Imports RDotNET.Extensions.VisualBasic.stats
+Imports RDotNET.Extensions.VisualBasic.API.stats
+Imports RDotNET.Extensions.VisualBasic.API
 
 ''' <summary>
 ''' ``chisq.test`` matrix services
@@ -26,7 +26,7 @@ Public Module TestMatrix
                 Dim array As SNPGenotype() = {x, y}
                 Dim result = TestMatrix.chisqTest(array).ToArray
                 Dim name As String = x.Population.Split(":"c).Last & "__vs_" & y.Population.Split(":"c).Last
-                Dim df As DocumentStream.File = result.MatrixView(array, name)
+                Dim df As File = result.MatrixView(array, name)
 
                 out.Append(df)
                 out.AppendLine()
@@ -84,7 +84,7 @@ Public Module TestMatrix
         '
         ' out <- chisq.test(mat);
 
-        Dim out As chisqTestResult = stats.chisqTest(matrix(c(Of Integer)(cv), nrow:=2))
+        Dim out As chisqTestResult = stats.chisqTest(matrix(c(Of Integer)(cv.ToArray), nrow:=2))
 
         Return New NamedValue(Of chisqTestResult) With {
             .Name = $"{a}/{b}",
