@@ -31,12 +31,13 @@ Imports Microsoft.VisualBasic
 Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.ComponentModel
-Imports Microsoft.VisualBasic.DocumentFormat.Csv
-Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
+Imports Microsoft.VisualBasic.Data.csv
+Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
+Imports Microsoft.VisualBasic.Text
 Imports RDotNET.Extensions.Bioinformatics
 Imports RDotNET.Extensions.VisualBasic.API
 Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.gplots
@@ -75,8 +76,8 @@ Module CLI
 
     <ExportAPI("/fst",
                Usage:="/fst /in <genotype.Csv> [/out <out.json>]")>
-    <ParameterInfo("/in", False, AcceptTypes:={GetType(FstPop)})>
-    <ParameterInfo("/out", True, AcceptTypes:={GetType(F_STATISTICS)})>
+    <Argument("/in", False, AcceptTypes:={GetType(FstPop)})>
+    <Argument("/out", True, AcceptTypes:={GetType(F_STATISTICS)})>
     Public Function fst(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".fst.json")
@@ -88,8 +89,8 @@ Module CLI
 
     <ExportAPI("/SNP.fst",
                Usage:="/SNP.fst /in <snp.genotype.Csv> [/out <out.json>]")>
-    <ParameterInfo("/in", False, AcceptTypes:={GetType(SNPGenotype)})>
-    <ParameterInfo("/out", True, AcceptTypes:={GetType(F_STATISTICS)})>
+    <Argument("/in", False, AcceptTypes:={GetType(SNPGenotype)})>
+    <Argument("/out", True, AcceptTypes:={GetType(F_STATISTICS)})>
     Public Function SNPFst(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".snp_fst.json")
@@ -107,7 +108,7 @@ Module CLI
         Dim array As Population() = data.ToArray(Function(x) New Population(x))
         Dim result As IEnumerable(Of DataSet) = F_STATISTICS.PairwiseFst(array)
         Dim maps As New Dictionary(Of String, String) From {
-            {NameOf(DataSet.Identifier), "population"}
+            {NameOf(DataSet.ID), "population"}
         }
         Return result.SaveTo(out, maps:=maps).CLICode
     End Function
@@ -118,7 +119,7 @@ Module CLI
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".pairwise_snp.fst.csv")
         Dim data As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
-        Dim keys As String = args.GetValue("/keys", "-").CliToken
+        Dim keys As String = args.GetValue("/keys", "-").CLIToken
 
         If keys <> "-" Then
             Dim keyTokens As New List(Of String)(keys.Split(","c))
@@ -134,7 +135,7 @@ Module CLI
         Dim array As Population() = data.ToArray(Function(x) New Population(x))
         Dim result As IEnumerable(Of DataSet) = F_STATISTICS.PairwiseFst(array)
         Dim maps As New Dictionary(Of String, String) From {
-            {NameOf(DataSet.Identifier), "population"}
+            {NameOf(DataSet.ID), "population"}
         }
         Return result.SaveTo(out, maps:=maps).CLICode
     End Function
@@ -144,22 +145,22 @@ Module CLI
     Public Function pairwisefstSNPBatch(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim EXPORT As String = args.GetValue("/out", [in].TrimDIR & ".pairwise_snp.fst/")
-        Dim keys As String = args.GetValue("/keys", "-").CliToken
+        Dim keys As String = args.GetValue("/keys", "-").CLIToken
         Dim api As String = GetType(CLI).API(NameOf(pairwisefst_SNP))
         Dim CLI As String() = LinqAPI.Exec(Of String) <=
  _
             From path As String
             In ls - l - wildcards("*.csv") <= [in]
             Let out As String = EXPORT & "/" & path.BaseName & ".Csv"
-            Select $"{api} /in {path.CliPath} /out {out.CliPath} /keys {keys}"
+            Select $"{api} /in {path.CLIPath} /out {out.CLIPath} /keys {keys}"
 
         Return App.SelfFolks(CLI, 32)
     End Function
 
     <ExportAPI("/SNP.region_views",
                Usage:="/SNP.region_views /in <in.DIR> [/filter <key1,key2,key3,...> /out <out.Csv>]")>
-    <ParameterInfo("/in", False, AcceptTypes:={GetType(SNPGenotype)})>
-    <ParameterInfo("/out", True, AcceptTypes:={GetType(SNPRegionView)})>
+    <Argument("/in", False, AcceptTypes:={GetType(SNPGenotype)})>
+    <Argument("/out", True, AcceptTypes:={GetType(SNPRegionView)})>
     Public Function SNPRegionView(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimDIR & ".SNP.region.Views.csv")
@@ -179,7 +180,7 @@ Module CLI
             [in].TrimSuffix & "." & args("/keys").NormalizePathString & ".csv")
         Dim ds As EntityObject() = EntityObject.LoadDataSet([in], ).ToArray
         Dim outMaps As New Dictionary(Of String, String) From {
-            {NameOf(EntityObject.Identifier), "population"}
+            {NameOf(EntityObject.ID), "population"}
         }
         Return ds.__subMatrix(keys).SaveTo(out, maps:=outMaps).CLICode
     End Function
@@ -189,9 +190,9 @@ Module CLI
         Dim result As New List(Of EntityObject)
 
         For Each x As EntityObject In ds
-            If Array.IndexOf(keys, x.Identifier) > -1 Then
+            If Array.IndexOf(keys, x.ID) > -1 Then
                 result += New EntityObject With {
-                    .Identifier = x.Identifier,
+                    .ID = x.ID,
                     .Properties = keys.Where(AddressOf x.Properties.ContainsKey) _
                     .ToDictionary(Of String, String)(
                         Function(k) k,
@@ -211,8 +212,8 @@ Module CLI
         Dim out As String = args.GetValue(
             "/out",
             [in].TrimDIR & "." & args("/keys").NormalizePathString & ".csv")
-        Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).MatrixToList
-        Dim output As New DocumentStream.File
+        Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).Unlist
+        Dim output As New IO.File
 
         output += {"sites/population"}.Join(combs.Select(Function(x) $"{x.Key}__vs_{x.Value}"))
 
@@ -278,7 +279,7 @@ Module CLI
 
         For Each row In matrix
             nodes += New node With {
-                .name = row.Identifier,
+                .name = row.ID,
                 .group = 1
             }
         Next
@@ -290,11 +291,11 @@ Module CLI
             }
         Next
 
-        Dim nodesHash = nodes.SeqIterator.ToDictionary(Function(x) x.obj.name)
+        Dim nodesHash = nodes.SeqIterator.ToDictionary(Function(x) x.value.name)
         Dim links As New List(Of link)
 
         For Each row In matrix
-            Dim source As Integer = nodesHash(row.Identifier).i
+            Dim source As Integer = nodesHash(row.ID).i
 
             For Each p In row.Properties
                 links += New link With {

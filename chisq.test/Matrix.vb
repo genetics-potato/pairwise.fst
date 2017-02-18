@@ -1,14 +1,15 @@
 ﻿Imports System.Runtime.CompilerServices
 Imports Microsoft.VisualBasic
 Imports Microsoft.VisualBasic.ComponentModel.DataSourceModel
-Imports Microsoft.VisualBasic.DocumentFormat.Csv
-Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
+Imports Microsoft.VisualBasic.Data.csv
+Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Linq
 Imports Pairwise.Fst
 Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.RScripts
 Imports RDotNET.Extensions.VisualBasic.API.utils
 Imports RDotNET.Extensions.VisualBasic.API.stats
 Imports RDotNET.Extensions.VisualBasic.API
+Imports Microsoft.VisualBasic.Language
 
 ''' <summary>
 ''' ``chisq.test`` matrix services
@@ -16,9 +17,9 @@ Imports RDotNET.Extensions.VisualBasic.API
 Public Module TestMatrix
 
     <Extension>
-    Public Iterator Function pairWise_chisqTest(data As IEnumerable(Of SNPGenotype)) As IEnumerable(Of DocumentStream.File)
+    Public Iterator Function pairWise_chisqTest(data As IEnumerable(Of SNPGenotype)) As IEnumerable(Of File)
         For Each x As SNPGenotype In data
-            Dim out As New DocumentStream.File With {
+            Dim out As New File With {
                 .FilePath = x.Population.NormalizePathString(True)
             }
 
@@ -56,7 +57,7 @@ Public Module TestMatrix
 
     Public Function Allele_chisqTest(a As SNPGenotype, b As SNPGenotype) As chisqTestResult
         Dim cv As New List(Of Integer)
-        Dim n As New Language.Value(Of Integer)
+        Dim n As New Value(Of Integer)
 
         cv += {n = a.Frequency(Scan0).Count, a.Frequency.Select(Function(x) x.Count).Sum - CInt(n)}
         cv += {n = b.Frequency(Scan0).Count, b.Frequency.Select(Function(x) x.Count).Sum - CInt(n)}
@@ -70,8 +71,8 @@ Public Module TestMatrix
         Dim cv As New List(Of Integer)
 
         For Each x As SeqValue(Of SNPGenotype) In array.SeqIterator
-            cv += x.obj(a, b).Count
-            cv += n(x) - x.obj(a, b).Count
+            cv += x.value(a, b).Count
+            cv += n(x) - x.value(a, b).Count
         Next
 
         ' R script hybrids programming
@@ -88,27 +89,27 @@ Public Module TestMatrix
 
         Return New NamedValue(Of chisqTestResult) With {
             .Name = $"{a}/{b}",
-            .x = out
+            .Value = out
         }
     End Function
 
     <Extension>
     Public Function MatrixView(chisqTest As IEnumerable(Of NamedValue(Of chisqTestResult)),
                                data As IEnumerable(Of SNPGenotype),
-                               name As String) As DocumentStream.File
-        Dim out As New DocumentStream.File
+                               name As String) As File
+        Dim out As New File
 
         out += {"Polymorphism", "Genotype", "Chi square", "P-value"} _
-            .JoinAsIterator(data.Select(Function(x) x.Population.Split(":"c).Last.Trim))
+            .JoinIterates(data.Select(Function(x) x.Population.Split(":"c).Last.Trim))
         out += {name, "", "", ""} _
-            .JoinAsIterator(data.Select(
+            .JoinIterates(data.Select(
             Function(x) x.Genotypes.Sum(
             Function(o) o.Count).ToString))
 
         For Each x In chisqTest
             Dim row As New RowObject From {""}
             Dim a As Char = x.Name.First, b As Char = x.Name.Last
-            row += New String() {x.Name, x.x.statistic, x.x.pvalue}
+            row += New String() {x.Name, x.Value.statistic, x.Value.pvalue}
 
             For Each pop In data
                 row += $"{pop(a, b).Count}({pop(a, b).Frequency})"

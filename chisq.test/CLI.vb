@@ -2,11 +2,12 @@
 Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.ComponentModel
-Imports Microsoft.VisualBasic.DocumentFormat.Csv
-Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
+Imports Microsoft.VisualBasic.Data.csv
+Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Serialization.JSON
+Imports Microsoft.VisualBasic.Text
 Imports Pairwise.Fst
 Imports RDotNET.Extensions.VisualBasic.API
 
@@ -33,7 +34,7 @@ Module CLI
 
         For Each snp As String In ls - l - r - wildcards("*.csv") <= [in]
             Dim out As String = EXPORT & snp.BaseName & ".csv"
-            Call App.SelfFolk($"{cmd} /in {snp.CliPath} /out {out.CliPath}").Run()
+            Call App.SelfFolk($"{cmd} /in {snp.CLIPath} /out {out.CLIPath}").Run()
         Next
 
         Return 0
@@ -46,7 +47,7 @@ Module CLI
         Dim EXPORT As String = args.GetValue("/out", [in].TrimSuffix & ".snp.genotype.chisq.test/")
         Dim genotypes As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
 
-        For Each df As DocumentStream.File In TestMatrix.pairWise_chisqTest(genotypes)
+        For Each df As File In TestMatrix.pairWise_chisqTest(genotypes)
             Dim out As String = EXPORT & "/" & df.FilePath & ".Csv"
             Call df.Save(out, Encodings.ASCII)
         Next
@@ -67,7 +68,7 @@ Module CLI
             From snp As String
             In ls - l - r - wildcards("*.csv") <= [in]
             Let out As String = EXPORT & snp.BaseName
-            Select $"{cmd} /in {snp.CliPath} /out {out.CliPath} /keys {keys.CliToken}"
+            Select $"{cmd} /in {snp.CLIPath} /out {out.CLIPath} /keys {keys.CLIToken}"
 
         Return App.SelfFolks(CLI, 32)
     End Function
@@ -78,7 +79,7 @@ Module CLI
         Dim [in] As String = args("/in")
         Dim keys As String() = args("/keys").Split(","c)
         Dim out As String = args.GetValue("/out", [in].TrimDIR & "-" & args("/keys").NormalizePathString & ".csv")
-        Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).MatrixToList
+        Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).Unlist
         Dim output As New List(Of EntityObject)
 
         ' output += {"site/pops"}.Join(combs.Select(Function(x) $"{x.Key}__vs_{x.Value}"))
@@ -94,7 +95,7 @@ Module CLI
                                               Function(x) x.x)
             Dim null As Boolean = False
             Dim site As New EntityObject With {
-                .Identifier = file.BaseName
+                .ID = file.BaseName
             }
 
             For Each pair As KeyValuePair(Of String, String) In combs
@@ -105,9 +106,9 @@ Module CLI
 
                 Dim result = {hash(pair.Key), hash(pair.Value)}.chisqTest.ToArray
 
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(AA)", result(0).x.pvalue & $" ({result(0).x.statistic})")
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(Aa)", result(1).x.pvalue & $" ({result(1).x.statistic})")
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(aa)", result(2).x.pvalue & $" ({result(2).x.statistic})")
+                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(AA)", result(0).Value.pvalue & $" ({result(0).Value.statistic})")
+                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(Aa)", result(1).Value.pvalue & $" ({result(1).Value.statistic})")
+                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(aa)", result(2).Value.pvalue & $" ({result(2).Value.statistic})")
             Next
 
             If Not null Then
@@ -116,7 +117,7 @@ Module CLI
         Next
 
         Dim maps As New Dictionary(Of String, String) From {
-            {NameOf(EntityObject.Identifier), "sites/pops"}
+            {NameOf(EntityObject.ID), "sites/pops"}
         }
         Return output.SaveTo(out, maps:=maps).CLICode
     End Function
@@ -127,7 +128,7 @@ Module CLI
         Dim [in] As String = args("/in")
         Dim keys As String() = args("/keys").Split(","c)
         Dim out As String = args.GetValue("/out", [in].TrimDIR & "-" & args("/keys").NormalizePathString & ".alleles.csv")
-        Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).MatrixToList
+        Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).Unlist
         Dim output As New List(Of EntityObject)
 
         ' output += {"site/pops"}.Join(combs.Select(Function(x) $"{x.Key}__vs_{x.Value}"))
@@ -143,7 +144,7 @@ Module CLI
                                               Function(x) x.x)
             Dim null As Boolean = False
             Dim site As New EntityObject With {
-                .Identifier = file.BaseName
+                .ID = file.BaseName
             }
 
             For Each pair As KeyValuePair(Of String, String) In combs  ' pops combination
@@ -163,7 +164,7 @@ Module CLI
         Next
 
         Dim maps As New Dictionary(Of String, String) From {
-            {NameOf(EntityObject.Identifier), "sites/pops"}
+            {NameOf(EntityObject.ID), "sites/pops"}
         }
         Return output.SaveTo(out, maps:=maps).CLICode
     End Function

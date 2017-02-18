@@ -2,8 +2,8 @@
 Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.ComponentModel.DataSourceModel
-Imports Microsoft.VisualBasic.DocumentFormat.Csv
-Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
+Imports Microsoft.VisualBasic.Data.csv
+Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
@@ -52,22 +52,22 @@ Partial Module CLI
                                                              Let id As String = file.BaseName.Split.First
                                                              Select New NamedValue(Of SNPGenotype()) With {
                                                                  .Name = id,
-                                                                 .x = file.LoadCsv(Of SNPGenotype)
+                                                                 .Value = file.LoadCsv(Of SNPGenotype)
                                                              }
         Dim allTags As String() = LinqAPI.Exec(Of String) <= From x As SNPGenotype
-                                                             In raw.Select(Function(o) o.x).MatrixAsIterator
+                                                             In raw.Select(Function(o) o.Value).IteratesALL
                                                              Select x.Population.Split(":"c).Last
                                                              Distinct
 
         For Each tag As String In allTags
             ds += New EntityObject With {
-                .Identifier = tag,
+                .ID = tag,
                 .Properties = New Dictionary(Of String, String)
             }
         Next
 
         For Each line In raw
-            For Each x As SNPGenotype In line.x
+            For Each x As SNPGenotype In line.Value
                 Dim b As Char = "", c As Char = ""
 
                 Call x.GetAllele(b, c)
@@ -104,7 +104,7 @@ Partial Module CLI
     Public Function LDheatmap_CLI(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".LDheatmap/")
-        Dim df As DocumentStream.File = DocumentStream.File.Load([in])
+        Dim df As File = File.Load([in])
         Dim ldm As LDheatmapS4Object
         Dim w As Integer = args.GetValue("/width", 1600),
             h As Integer = args.GetValue("/height", 1600)
@@ -112,7 +112,7 @@ Partial Module CLI
  _
             From cell As String
             In df.First
-            Where cell <> NameOf(EntityObject.Identifier)
+            Where cell <> NameOf(EntityObject.ID)
             Select cell
 
         Call out.MkDIR

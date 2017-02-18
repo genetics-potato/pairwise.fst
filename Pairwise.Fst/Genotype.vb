@@ -1,28 +1,28 @@
 ﻿#Region "Microsoft.VisualBasic::3bd870b205141c1078d9b51bcbfa27d2, ..\Pairwise.Fst\Genotype.vb"
 
-    ' Author:
-    ' 
-    '       asuka (amethyst.asuka@gcmodeller.org)
-    '       xieguigang (xie.guigang@live.com)
-    '       xie (genetics@smrucc.org)
-    ' 
-    ' Copyright (c) 2016 GPL3 Licensed
-    ' 
-    ' 
-    ' GNU GENERAL PUBLIC LICENSE (GPL3)
-    ' 
-    ' This program is free software: you can redistribute it and/or modify
-    ' it under the terms of the GNU General Public License as published by
-    ' the Free Software Foundation, either version 3 of the License, or
-    ' (at your option) any later version.
-    ' 
-    ' This program is distributed in the hope that it will be useful,
-    ' but WITHOUT ANY WARRANTY; without even the implied warranty of
-    ' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    ' GNU General Public License for more details.
-    ' 
-    ' You should have received a copy of the GNU General Public License
-    ' along with this program. If not, see <http://www.gnu.org/licenses/>.
+' Author:
+' 
+'       asuka (amethyst.asuka@gcmodeller.org)
+'       xieguigang (xie.guigang@live.com)
+'       xie (genetics@smrucc.org)
+' 
+' Copyright (c) 2016 GPL3 Licensed
+' 
+' 
+' GNU GENERAL PUBLIC LICENSE (GPL3)
+' 
+' This program is free software: you can redistribute it and/or modify
+' it under the terms of the GNU General Public License as published by
+' the Free Software Foundation, either version 3 of the License, or
+' (at your option) any later version.
+' 
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+' GNU General Public License for more details.
+' 
+' You should have received a copy of the GNU General Public License
+' along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #End Region
 
@@ -30,19 +30,20 @@ Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
 Imports Microsoft.VisualBasic
 Imports Microsoft.VisualBasic.ComponentModel
-Imports Microsoft.VisualBasic.DocumentFormat.Csv
-Imports Microsoft.VisualBasic.DocumentFormat.Csv.DocumentStream
-Imports Microsoft.VisualBasic.DocumentFormat.Csv.StorageProvider.Reflection
+Imports Microsoft.VisualBasic.Data.csv
+Imports Microsoft.VisualBasic.Data.csv.IO
+Imports Microsoft.VisualBasic.Data.csv.StorageProvider.Reflection
 Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
+Imports Microsoft.VisualBasic.Text
 
 Public Module Genotype
 
     ReadOnly __all As KeyValuePair(Of Char, Char)() =
         Comb(Of Char).CreateCompleteObjectPairs({"A"c, "T"c, "G"c, "C"c}) _
-                     .MatrixAsIterator _
+                     .IteratesALL _
                      .ToArray
 
     ''' <summary>
@@ -132,7 +133,7 @@ Public Module Genotype
 
         For Each x In bufs
             Call x.GetAllele(a, b)
-            If a <> NIL AndAlso b <> NIL Then
+            If a <> ASCII.NUL AndAlso b <> ASCII.NUL Then
                 Return $"{a}|{b}"
             Else
                 la += a
@@ -140,13 +141,13 @@ Public Module Genotype
             End If
         Next
 
-        a = la.Where(Function(x) x <> Nothing AndAlso x <> NIL).FirstOrDefault
-        b = lb.Where(Function(x) x <> Nothing AndAlso x <> NIL).FirstOrDefault
+        a = la.Where(Function(x) x <> Nothing AndAlso x <> ASCII.NUL).FirstOrDefault
+        b = lb.Where(Function(x) x <> Nothing AndAlso x <> ASCII.NUL).FirstOrDefault
 
-        If a = Nothing OrElse a = NIL Then
+        If a = Nothing OrElse a = ASCII.NUL Then
             a = "X"c
         End If
-        If b = Nothing OrElse b = NIL Then
+        If b = Nothing OrElse b = ASCII.NUL Then
             b = "x"c
         End If
 
@@ -252,7 +253,7 @@ Public Class Frequency
     Public Property Count As Integer
 
     Public Overrides Function ToString() As String
-        If type = Nothing OrElse type = NIL Then
+        If type = Nothing OrElse type = ASCII.NUL Then
             Return $"{base}: {Frequency} ({Count})"
         Else
             Return $"{type}|{base}: {Frequency} ({Count})"
