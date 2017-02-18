@@ -2,11 +2,12 @@
 
 After the clone of this CLI tools repository, two library was required for this tools source code reference:
 
-+ Microsoft CLI App runtime for VisualBasic
-    + https://github.com/xieguigang/VisualBasic_AppFramework
++ **sciBASIC** scientific computing environment
+    + https://github.com/xieguigang/sciBASIC
 + R.NET bioinformatics SDK
     + https://github.com/SMRUCC/R.Bioinformatics
 
+You needs clone these two repository at the same time, and add reference to the source code projects, and then you are able to compile the fst and chisq.test tools.
 
 # Calculating F-statistics from genotypic data
 
