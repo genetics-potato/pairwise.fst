@@ -52,6 +52,7 @@ Public Module TestMatrix
 
         Yield array.__chisqTest(a, a, n)
         Yield array.__chisqTest(a, b, n)
+        Yield array.__chisqTest(b, a, n)
         Yield array.__chisqTest(b, b, n)
     End Function
 
@@ -93,6 +94,13 @@ Public Module TestMatrix
         }
     End Function
 
+    ''' <summary>
+    ''' 将``chisq.test``的计算结果转换为``csv``文件之中的行数据
+    ''' </summary>
+    ''' <param name="chisqTest"></param>
+    ''' <param name="data"></param>
+    ''' <param name="name"></param>
+    ''' <returns></returns>
     <Extension>
     Public Function MatrixView(chisqTest As IEnumerable(Of NamedValue(Of chisqTestResult)),
                                data As IEnumerable(Of SNPGenotype),

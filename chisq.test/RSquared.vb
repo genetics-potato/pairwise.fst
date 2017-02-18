@@ -81,6 +81,7 @@ Partial Module CLI
                 Dim tag As String = x.Population.Split(":"c).Last
                 Dim bb = x.GetGenotype(b, b)
                 Dim bc = x.GetGenotype(b, c)
+                'Dim cb = x.GetGenotype(c, b)
                 Dim cc = x.GetGenotype(c, c)
                 Dim g As String = $"{b}/{b}", max As Double = bb.Frequency
 
