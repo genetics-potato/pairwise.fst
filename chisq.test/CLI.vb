@@ -32,7 +32,7 @@ Module CLI
             args.GetValue("/out", [in].TrimDIR & ".snp.genotype_chisq.test/")
         Dim cmd As String = GetType(CLI).API(NameOf(SNP_genotypeChisqTest))
 
-        For Each snp As String In ls - l - r - wildcards("*.csv") <= [in]
+        For Each snp As String In ls - l - r - "*.csv" <= [in]
             Dim out As String = EXPORT & snp.BaseName & ".csv"
             Call App.SelfFolk($"{cmd} /in {snp.CLIPath} /out {out.CLIPath}").Run()
         Next
@@ -66,7 +66,7 @@ Module CLI
         Dim CLI As String() = LinqAPI.Exec(Of String) <=
  _
             From snp As String
-            In ls - l - r - wildcards("*.csv") <= [in]
+            In ls - l - r - "*.csv" <= [in]
             Let out As String = EXPORT & snp.BaseName
             Select $"{cmd} /in {snp.CLIPath} /out {out.CLIPath} /keys {keys.CLIToken}"
 

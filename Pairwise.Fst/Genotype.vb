@@ -97,7 +97,7 @@ Public Module Genotype
     ''' <returns></returns>
     <Extension>
     Public Iterator Function RegionViews([Imports] As String, Optional filters As IEnumerable(Of String) = Nothing) As IEnumerable(Of SNPRegionView)
-        For Each file As String In ls - l - r - wildcards("*.csv") <= [Imports]
+        For Each file As String In ls - l - r - "*.csv" <= [Imports]
             Dim data As SNPGenotype() = file.LoadCsv(Of SNPGenotype)
             Dim hash As Dictionary(Of String, SNPGenotype) =
                 data.ToDictionary(
