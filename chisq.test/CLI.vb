@@ -46,8 +46,13 @@ Module CLI
         Dim [in] As String = args("/in")
         Dim EXPORT As String = args.GetValue("/out", [in].TrimSuffix & ".snp.genotype.chisq.test/")
         Dim genotypes As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
+        Dim keys$() = args.GetValue("/keys", "-").Split(","c)
 
-        For Each df As File In TestMatrix.pairWise_chisqTest(genotypes)
+        If keys.Length = 1 AndAlso keys(Scan0) = "-" Then
+            keys = Nothing
+        End If
+
+        For Each df As File In TestMatrix.pairWise_chisqTest(genotypes, keys)
             Dim out As String = EXPORT & "/" & df.FilePath & ".Csv"
             Call df.Save(out, Encodings.ASCII)
         Next

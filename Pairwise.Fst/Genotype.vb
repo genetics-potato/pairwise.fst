@@ -171,6 +171,12 @@ Public Class SNPGenotype
     Public Property Population As String
     Public Property ssID As String
 
+    Public ReadOnly Property RegionKey As String
+        Get
+            Return Population.Split(":"c).Last.Trim
+        End Get
+    End Property
+
     <Column("Allele: frequency (count)")>
     Public Property AlleleFrequency As String
         Get

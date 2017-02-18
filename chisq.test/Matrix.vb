@@ -17,13 +17,22 @@ Imports Microsoft.VisualBasic.Language
 Public Module TestMatrix
 
     <Extension>
-    Public Iterator Function pairWise_chisqTest(data As IEnumerable(Of SNPGenotype)) As IEnumerable(Of File)
-        For Each x As SNPGenotype In data
+    Public Iterator Function pairWise_chisqTest(data As IEnumerable(Of SNPGenotype), Optional keys$() = Nothing) As IEnumerable(Of File)
+        Dim source As SNPGenotype() = data.ToArray
+
+        ' 当区域代码不为空的时候，就会只计算所指定的目标区域的数据
+        If Not keys.IsNullOrEmpty Then
+            source = source _
+                .Where(Function(x) Array.IndexOf(keys, x.RegionKey) > -1) _
+                .ToArray
+        End If
+
+        For Each x As SNPGenotype In source
             Dim out As New File With {
                 .FilePath = x.Population.NormalizePathString(True)
             }
 
-            For Each y As SNPGenotype In data
+            For Each y As SNPGenotype In source
                 Dim array As SNPGenotype() = {x, y}
                 Dim result = TestMatrix.chisqTest(array).ToArray
                 Dim name As String = x.Population.Split(":"c).Last & "__vs_" & y.Population.Split(":"c).Last
