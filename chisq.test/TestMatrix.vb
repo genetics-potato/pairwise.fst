@@ -110,10 +110,55 @@ Public Module TestMatrix
             b% = db.__getCount(x),
             c% = da.__getCount(y),
             d% = db.__getCount(y)
-        Dim array$ = matrix({a, b, c, d}, nrow:=2)
+        Dim array$ = matrix({a, c, b, d}, nrow:=2)
         Dim out As chisqTestResult = stats.chisqTest(x:=array)
 
         Return (x, y, a, b, c, d, out)
+    End Function
+
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="popa"></param>
+    ''' <param name="popb"></param>
+    ''' <returns></returns>
+    ''' <remarks>
+    ''' ```vbnet
+    ''' |-|population a|population b|
+    ''' |-|------------|------------|
+    ''' |A|      a     |      b     |  
+    ''' |B|      c     |      d     |
+    ''' |C|      e     |      f     |
+    ''' |D|      g     |      h     |
+    ''' 
+    ''' a &lt;- matrix(c(a, c, e, g, b, d, f, h), ncol=2)
+    ''' chisq.test(a)
+    ''' 
+    '''    Pearson's Chi-squared test with Yates' continuity correction
+    '''
+    ''' data:  a
+    ''' X-squared = 1.1447, df = 1, p-value = 0.2847
+    ''' ```
+    ''' </remarks>
+    <Extension>
+    Public Function GenotypeFrequencyChisqTest(popa As SNPGenotype, popb As SNPGenotype) As (counts As (a%, b%, c%, d%, e%, f%, g%, h%), chisqTestResult)
+        Dim x As Char = Nothing, y As Char = Nothing
+
+        Call popa.GetAllele(x, y)
+
+        Dim a% = popa(x, x).Count,
+            b% = popb(x, x).Count,
+            c% = popa(x, y).Count,
+            d% = popb(x, y).Count,
+            e% = popa(y, x).Count,
+            f% = popb(y, x).Count,
+            g% = popa(y, y).Count,
+            h% = popb(y, y).Count
+        Dim array$ = matrix({a, c, e, g, b, d, f, h}, nrow:=2)
+        Dim out As chisqTestResult = stats.chisqTest(x:=array)
+        Dim counts = (a, b, c, d, e, f, g, h)
+
+        Return (counts, out)
     End Function
 
     <Extension>

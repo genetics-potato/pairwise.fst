@@ -197,6 +197,12 @@ Public Class SNPGenotype
         End Set
     End Property
 
+    ''' <summary>
+    ''' 这个属性是一个安全的属性，对于不存在的将不会返回空值。
+    ''' </summary>
+    ''' <param name="type"></param>
+    ''' <param name="base"></param>
+    ''' <returns></returns>
     Default Public Overloads ReadOnly Property [GetGenotype](type As Char, base As Char) As Frequency
         Get
             For Each x In Genotypes
