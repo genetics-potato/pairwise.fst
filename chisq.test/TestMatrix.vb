@@ -139,6 +139,8 @@ Public Module TestMatrix
     ''' data:  a
     ''' X-squared = 1.1447, df = 1, p-value = 0.2847
     ''' ```
+    ''' 
+    ''' 2017-2-20 当任意一个位置的值都为0的时候，chisq.test的值将无法进行计算，由于基因型只有GA或者AG这两种杂合体，所以这里只取某一个不为零的即可完成计算了
     ''' </remarks>
     <Extension>
     Public Function GenotypeFrequencyChisqTest(popa As SNPGenotype, popb As SNPGenotype) As (counts As (a%, b%, c%, d%, e%, f%, g%, h%), chisqTestResult)
@@ -154,7 +156,16 @@ Public Module TestMatrix
             f% = popb(y, x).Count,
             g% = popa(y, y).Count,
             h% = popb(y, y).Count
-        Dim array$ = matrix({a, c, e, g, b, d, f, h}, nrow:=2)
+        Dim vec%()
+
+        If c = d AndAlso c = 0 Then
+            vec = {a, e, g, b, f, h}
+        Else  ' 只有 A/G, G/A这两种情况，没有第三种了
+            vec = {a, c, g, b, d, h}
+        End If
+
+        ' 使用R之中的chisq.test函数进行检验
+        Dim array$ = matrix(data:=vec, nrow:=3)
         Dim out As chisqTestResult = stats.chisqTest(x:=array)
         Dim counts = (a, b, c, d, e, f, g, h)
 

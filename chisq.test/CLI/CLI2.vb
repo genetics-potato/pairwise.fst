@@ -42,4 +42,38 @@ Partial Module CLI
 
         Return App.SelfFolks(CLI, 32)
     End Function
+
+    <ExportAPI("/snp.genotype_frequency.chisq.test.pairwise",
+           Usage:="/snp.genotype_frequency.chisq.test.pairwise /in <snp.genotypes.csv> [/keys <-/key1,key2,key3,....> /out <out.csv>]")>
+    Public Function SNP_GenotypeFrequencyChisqTest_pairwise(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim EXPORT As String = args.GetValue("/out", [in].TrimSuffix & ".snp.genotype_frequency.chisq.test.csv")
+        Dim genotypes As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
+        Dim keys$() = args.GetValue("/keys", "-").Split(","c)
+
+        If keys.Length = 1 AndAlso keys(Scan0) = "-" Then
+            keys = Nothing
+        End If
+
+        Dim out As File = genotypes.PairwiseGenotypeFrequencyChisqTest(keys)
+        Return out.Save(EXPORT, Encodings.ASCII).CLICode
+    End Function
+
+    <ExportAPI("/snp.genotype_frequency.chisq.test.pairwise.batch",
+          Usage:="/snp.genotype_frequency.chisq.test.pairwise.batch /in <snp.genotypes.csv> [/keys <-/key1,key2,key3,....> /out <out.csv>]")>
+    Public Function SNP_GenotypeFrequencyChisqTest_pairwise_BATCH(args As CommandLine) As Integer
+        Dim [in] As String = args("/in")
+        Dim EXPORT As String =
+            args.GetValue("/out", [in].TrimDIR & ".snp..genotype_frequency_chisq.test_pairwise/")
+        Dim keys As String = args.GetValue("/keys", "-")
+        Dim cmd As String = GetType(CLI).API(NameOf(SNP_GenotypeFrequencyChisqTest_pairwise))
+        Dim CLI As String() = LinqAPI.Exec(Of String) <=
+ _
+            From snp As String
+            In ls - l - r - "*.csv" <= [in]
+            Let out As String = EXPORT & snp.BaseName & ".csv"
+            Select $"{cmd} /in {snp.CLIPath} /out {out.CLIPath} /keys {keys.CLIToken}"
+
+        Return App.SelfFolks(CLI, 32)
+    End Function
 End Module
