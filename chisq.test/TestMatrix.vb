@@ -162,6 +162,37 @@ Public Module TestMatrix
     End Function
 
     <Extension>
+    Public Function PairwiseGenotypeFrequencyChisqTest(populations As IEnumerable(Of SNPGenotype), Optional keys$() = Nothing) As File
+        Dim out As New File
+        Dim source As SNPGenotype() = If(
+            keys.IsNullOrEmpty,
+            populations.ToArray,
+            populations _
+                .Where(Function(p) Array.IndexOf(keys, p.RegionKey) > -1) _
+                .ToArray)
+
+        out += {"Polymorphism", "population A", "population B", "Chi square", "p-value"}
+
+        For Each i As SNPGenotype In source
+            For Each j As SNPGenotype In source
+                Dim result As (counts As (a%, b%, c%, d%, e%, f%, g%, h%), chisqTestResult) = GenotypeFrequencyChisqTest(i, j)
+
+                With result
+                    out += {
+                        $"{i.RegionKey}__vs_{j.RegionKey}",
+                        i.GenotypeFreqnency,
+                        j.GenotypeFreqnency,
+                        CStr(.Item2.statistic),
+                        CStr(.Item2.pvalue)
+                    }
+                End With
+            Next
+        Next
+
+        Return out
+    End Function
+
+    <Extension>
     Private Function __getCount(frequency As Dictionary(Of Char, Frequency), type As Char) As Integer
         If frequency.ContainsKey(type) Then
             Return frequency(type).Count
