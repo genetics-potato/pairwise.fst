@@ -28,8 +28,8 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
-Imports Microsoft.VisualBasic
-Imports Microsoft.VisualBasic.ComponentModel
+Imports Microsoft.VisualBasic.ListExtensions
+Imports Microsoft.VisualBasic.ComponentModel.Algorithm.base
 Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Data.csv.StorageProvider.Reflection
@@ -41,7 +41,7 @@ Imports Microsoft.VisualBasic.Text
 
 Public Module Genotype
 
-    ReadOnly __all As KeyValuePair(Of Char, Char)() =
+    ReadOnly __all As Tuple(Of Char, Char)() =
         Comb(Of Char).CreateCompleteObjectPairs({"A"c, "T"c, "G"c, "C"c}) _
                      .IteratesALL _
                      .ToArray

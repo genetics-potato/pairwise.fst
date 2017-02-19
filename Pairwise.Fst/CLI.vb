@@ -27,10 +27,9 @@
 #End Region
 
 Imports System.Runtime.CompilerServices
-Imports Microsoft.VisualBasic
 Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
-Imports Microsoft.VisualBasic.ComponentModel
+Imports Microsoft.VisualBasic.ComponentModel.Algorithm.base
 Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Language
@@ -39,7 +38,6 @@ Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Microsoft.VisualBasic.Text
 Imports RDotNET.Extensions.Bioinformatics
-Imports RDotNET.Extensions.VisualBasic.API
 Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.gplots
 Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.grDevices
 Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.utils.read.table
@@ -215,7 +213,7 @@ Module CLI
         Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).Unlist
         Dim output As New IO.File
 
-        output += {"sites/population"}.Join(combs.Select(Function(x) $"{x.Key}__vs_{x.Value}"))
+        output += {"sites/population"}.Join(combs.Select(Function(x) $"{x.Item1}__vs_{x.Item2}"))
 
         For Each file As String In ls - l - r - wildcards("*.csv") <= [in]
             Dim mat = EntityObject.LoadDataSet(file,).__subMatrix(keys)
@@ -223,10 +221,10 @@ Module CLI
             Dim row As New RowObject From {file.BaseName}
 
             For Each x In combs
-                If hash.ContainsKey(x.Key) Then
-                    Dim v = hash(x.Key)
-                    If v.Properties.ContainsKey(x.Value) Then
-                        row += v.Properties(x.Value)
+                If hash.ContainsKey(x.Item1) Then
+                    Dim v = hash(x.Item1)
+                    If v.Properties.ContainsKey(x.Item2) Then
+                        row += v.Properties(x.Item2)
                     Else
                         row += "-"
                     End If

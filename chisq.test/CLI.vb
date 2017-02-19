@@ -1,7 +1,6 @@
-﻿Imports Microsoft.VisualBasic
-Imports Microsoft.VisualBasic.CommandLine
+﻿Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
-Imports Microsoft.VisualBasic.ComponentModel
+Imports Microsoft.VisualBasic.ComponentModel.Algorithm.base
 Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Language
@@ -103,17 +102,17 @@ Module CLI
                 .ID = file.BaseName
             }
 
-            For Each pair As KeyValuePair(Of String, String) In combs
-                If Not hash.ContainsKey(pair.Key) OrElse
-                    Not hash.ContainsKey(pair.Value) Then
+            For Each pair As Tuple(Of String, String) In combs
+                If Not hash.ContainsKey(pair.Item1) OrElse
+                    Not hash.ContainsKey(pair.Item2) Then
                     Exit For
                 End If
 
-                Dim result = {hash(pair.Key), hash(pair.Value)}.chisqTest.ToArray
+                Dim result = {hash(pair.Item1), hash(pair.Item2)}.chisqTest.ToArray
 
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(AA)", result(0).Value.pvalue & $" ({result(0).Value.statistic})")
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(Aa)", result(1).Value.pvalue & $" ({result(1).Value.statistic})")
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}(aa)", result(2).Value.pvalue & $" ({result(2).Value.statistic})")
+                site.Properties.Add($"{pair.Item1}__vs_{pair.Item2}(AA)", result(0).Value.pvalue & $" ({result(0).Value.statistic})")
+                site.Properties.Add($"{pair.Item1}__vs_{pair.Item2}(Aa)", result(1).Value.pvalue & $" ({result(1).Value.statistic})")
+                site.Properties.Add($"{pair.Item1}__vs_{pair.Item2}(aa)", result(2).Value.pvalue & $" ({result(2).Value.statistic})")
             Next
 
             If Not null Then
@@ -152,15 +151,15 @@ Module CLI
                 .ID = file.BaseName
             }
 
-            For Each pair As KeyValuePair(Of String, String) In combs  ' pops combination
-                If Not hash.ContainsKey(pair.Key) OrElse
-                    Not hash.ContainsKey(pair.Value) Then
+            For Each pair As Tuple(Of String, String) In combs  ' pops combination
+                If Not hash.ContainsKey(pair.Item1) OrElse
+                    Not hash.ContainsKey(pair.Item2) Then
                     Exit For
                 End If
 
-                Dim result As chisqTestResult = Allele_chisqTest(hash(pair.Key), hash(pair.Value))
+                Dim result As chisqTestResult = Allele_chisqTest(hash(pair.Item1), hash(pair.Item2))
 
-                site.Properties.Add($"{pair.Key}__vs_{pair.Value}", $"{result.pvalue} ({result.statistic})")
+                site.Properties.Add($"{pair.Item1}__vs_{pair.Item2}", $"{result.pvalue} ({result.statistic})")
             Next
 
             If Not null Then
