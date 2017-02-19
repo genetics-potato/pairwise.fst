@@ -76,6 +76,87 @@ Public Module TestMatrix
         Return out
     End Function
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="popa"></param>
+    ''' <param name="popb"></param>
+    ''' <returns></returns>
+    ''' <remarks>
+    ''' ```vbnet
+    ''' |-|population a|population b|
+    ''' |-|------------|------------|
+    ''' |A|      a     |      b     |  
+    ''' |B|      c     |      d     |
+    ''' 
+    ''' a &lt;- matrix(c(a, c, b, d), ncol=2)
+    ''' chisq.test(a)
+    ''' 
+    '''    Pearson's Chi-squared test with Yates' continuity correction
+    '''
+    ''' data:  a
+    ''' X-squared = 1.1447, df = 1, p-value = 0.2847
+    ''' ```
+    ''' </remarks>
+    <Extension>
+    Public Function AlleleFrequencyChisqTest(popa As SNPGenotype, popb As SNPGenotype) As (A As Char, B As Char, ca%, cb%, cc%, cd%, chisqTestResult)
+        Dim x As Char = Nothing, y As Char = Nothing
+        Dim da = popa.Frequency.ToDictionary(Function(al) al.base)
+        Dim db = popb.Frequency.ToDictionary(Function(al) al.base)
+
+        Call popa.GetAllele(x, y)
+
+        Dim a% = da.__getCount(x),
+            b% = db.__getCount(x),
+            c% = da.__getCount(y),
+            d% = db.__getCount(y)
+        Dim array$ = matrix({a, b, c, d}, nrow:=2)
+        Dim out As chisqTestResult = stats.chisqTest(x:=array)
+
+        Return (x, y, a, b, c, d, out)
+    End Function
+
+    <Extension>
+    Private Function __getCount(frequency As Dictionary(Of Char, Frequency), type As Char) As Integer
+        If frequency.ContainsKey(type) Then
+            Return frequency(type).Count
+        Else
+            Return 0
+        End If
+    End Function
+
+    <Extension>
+    Public Function PairwiseAlleleFrequencyChisqTest(populations As IEnumerable(Of SNPGenotype), Optional keys$() = Nothing) As File
+        Dim out As New File
+        Dim source As SNPGenotype() = If(
+            keys.IsNullOrEmpty,
+            populations.ToArray,
+            populations _
+                .Where(Function(p) Array.IndexOf(keys, p.RegionKey) > -1) _
+                .ToArray)
+
+        out += {"Polymorphism", "population A", "population B", "Chi square", "p-value"}
+
+        For Each i As SNPGenotype In source
+            For Each j As SNPGenotype In source
+                Dim chisqTest As (A As Char, B As Char, ca%, cb%, cc%, cd%, chisqTestResult) =
+                    AlleleFrequencyChisqTest(i, j)
+
+                With chisqTest
+                    out += {
+                        $"{i.RegionKey}__vs_{j.RegionKey}",
+                        $"{ .A}/{ .B} = { .ca}/{ .cc}",
+                        $"{ .A}/{ .B} = { .cb}/{ .cd}",
+                        CStr(.Item7.statistic),
+                        CStr(.Item7.pvalue)
+                    }
+                End With
+            Next
+        Next
+
+        Return out
+    End Function
+
     <Extension>
     Private Function __chisqTest(array As SNPGenotype(), a As Char, b As Char, n As Integer()) As NamedValue(Of chisqTestResult)
         Dim cv As New List(Of Integer)
