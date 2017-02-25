@@ -97,12 +97,13 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CLI\Tools.vb" />
     <Compile Include="FstPop.vb" />
     <Compile Include="Fst.vb" />
     <Compile Include="F-STATISTICS.vb" />
     <Compile Include="Genotype.vb" />
     <Compile Include="Population.vb" />
-    <Compile Include="CLI.vb" />
+    <Compile Include="CLI\CLI.vb" />
     <Compile Include="Program.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
