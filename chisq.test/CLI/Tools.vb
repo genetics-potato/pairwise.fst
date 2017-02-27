@@ -1,10 +1,12 @@
 ﻿Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
+Imports Microsoft.VisualBasic.ComponentModel.Collection
 Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Text
+Imports Pairwise.Fst
 
 Partial Module CLI
 
@@ -20,6 +22,16 @@ Partial Module CLI
                            .LoadDataSet(path) _
                            .ToArray
                    End Function
+        Dim indexOf As New IndexOf(Of String)(Genotype.Continents.Select(AddressOf LCase))
+        Dim getPopTag = Function(ID$)
+                            Dim tokens$() = Strings.Split(ID, "__vs_")
+
+                            If indexOf(tokens(Scan0)) > -1 OrElse indexOf(tokens(1)) > -1 Then
+                                Return Nothing
+                            Else
+                                Return tokens.OrderBy(Function(s) s).JoinBy("__vs_")
+                            End If
+                        End Function
 
         For Each DIR As String In dirs
             ' 里面的sub folders都是snp位点
@@ -33,22 +45,28 @@ Partial Module CLI
 
                 For Each pop As EntityObject In pops
                     Dim value$ = pop(tag)
+                    Dim popID$ = getPopTag(pop.ID)
 
-                    If Not populations.ContainsKey(pop.ID) Then
+                    If popID Is Nothing Then
+                        Continue For
+                    End If
+
+                    If Not populations.ContainsKey(popID) Then
                         Call populations.Add(
-                            pop.ID,
+                            popID,
                             New EntityObject With {
-                                .ID = pop.ID,
+                                .ID = popID,
                                 .Properties = New Dictionary(Of String, String)
                             })
                     End If
 
-                    populations(pop.ID).Properties(name) = value
+                    populations(popID).Properties(name) = value
                 Next
             Next
         Next
 
         Return populations.Values _
+            .OrderBy(Function(pop) pop.ID) _
             .ToArray _
             .SaveTo(out, Encodings.ASCII) _
             .CLICode

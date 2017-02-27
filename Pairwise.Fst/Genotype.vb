@@ -41,6 +41,12 @@ Imports Microsoft.VisualBasic.Text
 
 Public Module Genotype
 
+    Public Const ALL$ = NameOf(ALL), AFR$ = NameOf(AFR), AMR$ = NameOf(AMR), EAS$ = NameOf(EAS), EUR$ = NameOf(EUR), SAS$ = NameOf(SAS)
+
+    Public ReadOnly Property Continents As String() = {
+        ALL, AFR, AMR, EAS, EUR, SAS
+    }
+
     ReadOnly __all As Tuple(Of Char, Char)() =
         Comb(Of Char).CreateCompleteObjectPairs({"A"c, "T"c, "G"c, "C"c}) _
                      .IteratesALL _
