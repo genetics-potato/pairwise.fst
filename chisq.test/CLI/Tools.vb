@@ -22,24 +22,29 @@ Partial Module CLI
                    End Function
 
         For Each DIR As String In dirs
-            Dim pops = (ls - l - r - "*.csv" <= DIR) _
-                .Select(load) _
-                .IteratesALL
-            Dim name$ = DIR.BaseName
+            ' 里面的sub folders都是snp位点
+            Dim subFolders = (ls - l - "*.csv" <= DIR).ToArray
+            Dim type$ = DIR.BaseName
 
-            For Each pop As EntityObject In pops
-                Dim value$ = pop(tag)
+            For Each snp$ In subFolders
 
-                If Not populations.ContainsKey(pop.ID) Then
-                    Call populations.Add(
-                        pop.ID,
-                        New EntityObject With {
-                            .ID = pop.ID,
-                            .Properties = New Dictionary(Of String, String)
-                        })
-                End If
+                Dim pops As EntityObject() = load(path:=snp)
+                Dim name$ = snp.BaseName.Split("_"c).Last & $" [{type}]"
 
-                populations(pop.ID).Properties(name) = value
+                For Each pop As EntityObject In pops
+                    Dim value$ = pop(tag)
+
+                    If Not populations.ContainsKey(pop.ID) Then
+                        Call populations.Add(
+                            pop.ID,
+                            New EntityObject With {
+                                .ID = pop.ID,
+                                .Properties = New Dictionary(Of String, String)
+                            })
+                    End If
+
+                    populations(pop.ID).Properties(name) = value
+                Next
             Next
         Next
 
