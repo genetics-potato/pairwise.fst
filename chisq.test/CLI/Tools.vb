@@ -22,14 +22,21 @@ Partial Module CLI
                            .LoadDataSet(path) _
                            .ToArray
                    End Function
-        Dim indexOf As New IndexOf(Of String)(Genotype.Continents.Select(AddressOf LCase))
+        Dim indexOf As New IndexOf(Of String)(Genotype.Continents)
         Dim getPopTag = Function(ID$)
-                            Dim tokens$() = Strings.Split(ID, "__vs_")
+                            Dim tokens$() = Strings _
+                                .Split(ID, "_vs_") _
+                                .Select(Function(s) s.Trim("_"c)) _
+                                .ToArray
 
-                            If indexOf(tokens(Scan0)) > -1 OrElse indexOf(tokens(1)) > -1 Then
+                            If tokens(0) = tokens(1) Then
                                 Return Nothing
-                            Else
+                            End If
+
+                            If indexOf(tokens(Scan0)) = -1 AndAlso indexOf(tokens(1)) = -1 Then
                                 Return tokens.OrderBy(Function(s) s).JoinBy("__vs_")
+                            Else
+                                Return Nothing
                             End If
                         End Function
 
