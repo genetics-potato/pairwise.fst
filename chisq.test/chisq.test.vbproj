@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLI\CLI2.vb" />
+    <Compile Include="CLI\Tools.vb" />
     <Compile Include="TestMatrix.vb" />
     <Compile Include="CLI\CLI.vb" />
     <Compile Include="RSquared.vb" />
