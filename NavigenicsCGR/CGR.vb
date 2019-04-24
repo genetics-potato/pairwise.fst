@@ -5,6 +5,9 @@ Imports Microsoft.VisualBasic.Math
 ''' <summary>
 ''' Combined genetic risk
 ''' </summary>
+''' <remarks>
+''' https://zhuanlan.zhihu.com/p/49762423
+''' </remarks>
 Public Module CGR
 
     ''' <summary>
