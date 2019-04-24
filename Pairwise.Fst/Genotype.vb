@@ -75,7 +75,7 @@ Public Module Genotype
 
     Public Function Frequencies(field As String) As Frequency()
         Dim fs As String() = Regex.Matches(field, Frequency, RegexICSng).ToArray
-        Return fs.ToArray(AddressOf FrequencyParser)
+        Return fs.Select(AddressOf FrequencyParser).ToArray
     End Function
 
     Const Genotype As String = "[ATGC]\|[ATGC]: \d\.\d+ \(\d+\)"
@@ -186,7 +186,7 @@ Public Class SNPGenotype
     <Column("Allele: frequency (count)")>
     Public Property AlleleFrequency As String
         Get
-            Return String.Join("", Frequency.ToArray(Function(x) x.ToString))
+            Return String.Join("", Frequency.Select(Function(x) x.ToString)).ToArray
         End Get
         Set(value As String)
             _Frequency = Genotype.Frequencies(value)
@@ -196,7 +196,7 @@ Public Class SNPGenotype
     <Column("Genotype: frequency (count)")>
     Public Property GenotypeFreqnency As String
         Get
-            Return String.Join("", Genotypes.ToArray(Function(x) x.ToString))
+            Return String.Join("", Genotypes.Select(Function(x) x.ToString)).ToArray
         End Get
         Set(value As String)
             _Genotypes = Genotype.Genotypes(value)
@@ -239,7 +239,7 @@ Public Class SNPGenotype
     End Function
 
     Public Sub GetAllele(ByRef x As Char, ByRef y As Char)
-        Dim als As Char() = Frequency.ToArray(Function(o) o.base)
+        Dim als As Char() = Frequency.Select(Function(o) o.base).ToArray
 
         x = als(Scan0)
 

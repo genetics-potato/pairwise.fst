@@ -40,7 +40,7 @@ Public Module Fst
     <Extension>
     Public Function pA(pops As IEnumerable(Of Population)) As Double
         Dim array As Population() = pops.ToArray
-        Dim N As Double() = array.ToArray(Function(x) x.N * 2.0R)
+        Dim N As Double() = array.Select(Function(x) x.N * 2.0R).ToArray
         Dim A As Double = array.SeqIterator.Sum(Function(x) x.value.p * N(x.i))
         Dim p As Double = A / N.Sum
         Return p

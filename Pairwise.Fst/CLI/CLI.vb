@@ -27,6 +27,7 @@
 #End Region
 
 Imports System.Runtime.CompilerServices
+Imports Microsoft.VisualBasic.ApplicationServices
 Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.ComponentModel.Algorithm.base
@@ -80,7 +81,7 @@ Module CLI
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".fst.json")
         Dim data As IEnumerable(Of FstPop) = [in].LoadCsv(Of FstPop)
-        Dim array As Population() = data.ToArray(Function(x) New Population(x))
+        Dim array As Population() = data.Select(Function(x) New Population(x)).ToArray
         Dim result As New F_STATISTICS(array)
         Return result.GetJson.SaveTo(out).CLICode
     End Function
@@ -93,7 +94,7 @@ Module CLI
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".snp_fst.json")
         Dim data As IEnumerable(Of SNPGenotype) = [in].LoadCsv(Of SNPGenotype)
-        Dim array As Population() = data.ToArray(Function(x) New Population(x))
+        Dim array As Population() = data.Select(Function(x) New Population(x)).ToArray
         Dim result As New F_STATISTICS(array)
         Return result.GetJson.SaveTo(out).CLICode
     End Function
@@ -103,7 +104,7 @@ Module CLI
         Dim [in] As String = args("/in")
         Dim out As String = args.GetValue("/out", [in].TrimSuffix & ".pairwise_fst.csv")
         Dim data As IEnumerable(Of FstPop) = [in].LoadCsv(Of FstPop)
-        Dim array As Population() = data.ToArray(Function(x) New Population(x))
+        Dim array As Population() = data.Select(Function(x) New Population(x)).ToArray
         Dim result As IEnumerable(Of DataSet) = F_STATISTICS.PairwiseFst(array)
         Dim maps As New Dictionary(Of String, String) From {
             {NameOf(DataSet.ID), "population"}
@@ -130,7 +131,7 @@ Module CLI
                 Select x
         End If
 
-        Dim array As Population() = data.ToArray(Function(x) New Population(x))
+        Dim array As Population() = data.Select(Function(x) New Population(x)).ToArray
         Dim result As IEnumerable(Of DataSet) = F_STATISTICS.PairwiseFst(array)
         Dim maps As New Dictionary(Of String, String) From {
             {NameOf(DataSet.ID), "population"}
@@ -173,9 +174,7 @@ Module CLI
     Public Function MatrixFilter(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim keys As String() = args("/keys").Split(","c)
-        Dim out As String = args.GetValue(
-            "/out",
-            [in].TrimSuffix & "." & args("/keys").NormalizePathString & ".csv")
+        Dim out As String = args("/out") Or ([in].TrimSuffix & "." & args("/keys").NormalizePathString & ".csv")
         Dim ds As EntityObject() = EntityObject.LoadDataSet([in], ).ToArray
         Dim outMaps As New Dictionary(Of String, String) From {
             {NameOf(EntityObject.ID), "population"}
@@ -207,9 +206,7 @@ Module CLI
     Public Function PairwiseMatrix(args As CommandLine) As Integer
         Dim [in] As String = args("/in")
         Dim keys As String() = args("/keys").Split(","c)
-        Dim out As String = args.GetValue(
-            "/out",
-            [in].TrimDIR & "." & args("/keys").NormalizePathString & ".csv")
+        Dim out As String = args("/out") Or ([in].TrimDIR & "." & args("/keys").NormalizePathString & ".csv")
         Dim combs = Comb(Of String).CreateCompleteObjectPairs(keys).Unlist
         Dim output As New IO.File
 

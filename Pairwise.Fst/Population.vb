@@ -26,12 +26,11 @@
 
 #End Region
 
-Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Microsoft.VisualBasic.Text
 
-Public Class Population : Inherits ClassObject
+Public Class Population
 
     Public Property Population As String
     Public Property Genotype As Dictionary(Of String, Integer)
@@ -144,7 +143,7 @@ Public Class Population : Inherits ClassObject
     End Sub
 
     Sub New(snp As SNPGenotype)
-        Dim genes As Char() = snp.Frequency.ToArray(Function(x) x.base)
+        Dim genes As Char() = snp.Frequency.Select(Function(x) x.base).ToArray
         Dim a As Char = genes(0)
         Dim b As Char = genes.Get(1)
 
