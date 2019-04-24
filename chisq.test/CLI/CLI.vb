@@ -10,7 +10,7 @@ Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Microsoft.VisualBasic.Text
 Imports Pairwise.Fst
-Imports RDotNET.Extensions.VisualBasic.API
+Imports RApi = RDotNET.Extensions.VisualBasic.API
 
 Module CLI
 
@@ -161,7 +161,7 @@ Module CLI
                     Exit For
                 End If
 
-                Dim result As chisqTestResult = Allele_chisqTest(hash(pair.Item1), hash(pair.Item2))
+                Dim result As RApi.chisqTestResult = Allele_chisqTest(hash(pair.Item1), hash(pair.Item2))
 
                 site.Properties.Add($"{pair.Item1}__vs_{pair.Item2}", $"{result.pvalue} ({result.statistic})")
             Next

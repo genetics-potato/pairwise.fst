@@ -22,7 +22,7 @@ Partial Module CLI
                            .LoadDataSet(path) _
                            .ToArray
                    End Function
-        Dim indexOf As New IndexOf(Of String)(Genotype.Continents)
+        Dim indexOf As New Index(Of String)(Genotype.Continents)
         Dim getPopTag = Function(ID$)
                             Dim tokens$() = Strings _
                                 .Split(ID, "_vs_") _
