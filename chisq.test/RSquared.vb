@@ -1,6 +1,6 @@
-﻿Imports Microsoft.VisualBasic
-Imports Microsoft.VisualBasic.CommandLine
+﻿Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
+Imports Microsoft.VisualBasic.ComponentModel.Collection
 Imports Microsoft.VisualBasic.ComponentModel.DataSourceModel
 Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
@@ -9,10 +9,9 @@ Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Pairwise.Fst
-Imports RDotNet.Extensions
+Imports RDotNET.Extensions
 Imports RDotNET.Extensions.Bioinformatics.LDheatmap
-Imports RDotNet.Extensions.VisualBasic.API.grDevices
-Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.grDevices
+Imports RDotNET.Extensions.VisualBasic.API.grDevices
 
 Partial Module CLI
 

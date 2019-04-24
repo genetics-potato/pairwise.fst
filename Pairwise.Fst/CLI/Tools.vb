@@ -1,18 +1,9 @@
-﻿Imports System.Runtime.CompilerServices
-Imports Microsoft.VisualBasic.CommandLine
+﻿Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.ComponentModel.Algorithm.base
-Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
-Imports Microsoft.VisualBasic.Language
-Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Linq
-Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Microsoft.VisualBasic.Text
-Imports RDotNET.Extensions.Bioinformatics
-Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.gplots
-Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.grDevices
-Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.packages.utils.read.table
 
 Partial Module CLI
 

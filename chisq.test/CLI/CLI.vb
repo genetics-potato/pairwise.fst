@@ -1,9 +1,11 @@
-﻿Imports Microsoft.VisualBasic.CommandLine
+﻿Imports Microsoft.VisualBasic.ApplicationServices
+Imports Microsoft.VisualBasic.CommandLine
 Imports Microsoft.VisualBasic.CommandLine.Reflection
 Imports Microsoft.VisualBasic.ComponentModel.Algorithm.base
 Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
 Imports Microsoft.VisualBasic.Language
+Imports Microsoft.VisualBasic.Language.Default
 Imports Microsoft.VisualBasic.Language.UnixBash
 Imports Microsoft.VisualBasic.Serialization.JSON
 Imports Microsoft.VisualBasic.Text
@@ -51,9 +53,11 @@ Module CLI
             keys = Nothing
         End If
 
-        For Each df As File In TestMatrix.pairWise_chisqTest(genotypes, keys)
-            Dim out As String = EXPORT & "/" & df.FilePath & ".Csv"
-            Call df.Save(out, Encodings.ASCII)
+        For Each df As (filePath$, File) In TestMatrix.pairWise_chisqTest(genotypes, keys)
+            Dim out As String = EXPORT & "/" & df.filePath & ".Csv"
+            Dim dataframe As File = df.Item2
+
+            Call dataframe.Save(out, Encodings.ASCII)
         Next
 
         Return 0

@@ -1,15 +1,11 @@
 ﻿Imports System.Runtime.CompilerServices
-Imports Microsoft.VisualBasic
 Imports Microsoft.VisualBasic.ComponentModel.DataSourceModel
-Imports Microsoft.VisualBasic.Data.csv
 Imports Microsoft.VisualBasic.Data.csv.IO
+Imports Microsoft.VisualBasic.Language
 Imports Microsoft.VisualBasic.Linq
 Imports Pairwise.Fst
-Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.RScripts
-Imports RDotNET.Extensions.VisualBasic.API.utils
-Imports RDotNET.Extensions.VisualBasic.API.stats
 Imports RDotNET.Extensions.VisualBasic.API
-Imports Microsoft.VisualBasic.Language
+Imports RDotNET.Extensions.VisualBasic.SymbolBuilder.RScripts
 
 ''' <summary>
 ''' ``chisq.test`` matrix services
@@ -17,7 +13,7 @@ Imports Microsoft.VisualBasic.Language
 Public Module TestMatrix
 
     <Extension>
-    Public Iterator Function pairWise_chisqTest(data As IEnumerable(Of SNPGenotype), Optional keys$() = Nothing) As IEnumerable(Of File)
+    Public Iterator Function pairWise_chisqTest(data As IEnumerable(Of SNPGenotype), Optional keys$() = Nothing) As IEnumerable(Of (String, File))
         Dim source As SNPGenotype() = data.ToArray
 
         ' 当区域代码不为空的时候，就会只计算所指定的目标区域的数据
@@ -28,9 +24,7 @@ Public Module TestMatrix
         End If
 
         For Each x As SNPGenotype In source
-            Dim out As New File With {
-                .FilePath = x.Population.NormalizePathString(True)
-            }
+            Dim out As New File
 
             For Each y As SNPGenotype In source
                 Dim array As SNPGenotype() = {x, y}
@@ -42,7 +36,7 @@ Public Module TestMatrix
                 out.AppendLine()
             Next
 
-            Yield out
+            Yield (x.Population.NormalizePathString(True), out)
         Next
     End Function
 
@@ -55,7 +49,7 @@ Public Module TestMatrix
     Public Iterator Function chisqTest(data As IEnumerable(Of SNPGenotype)) As IEnumerable(Of NamedValue(Of chisqTestResult))
         Dim a As Char = Nothing, b As Char = Nothing
         Dim array As SNPGenotype() = data.ToArray
-        Dim n As Integer() = array.ToArray(Function(x) x.Genotypes.Sum(Function(o) o.Count))
+        Dim n As Integer() = array.Select(Function(x) x.Genotypes.Sum(Function(o) o.Count)).ToArray
 
         Call array(Scan0).GetAllele(a, b)
 
@@ -72,7 +66,7 @@ Public Module TestMatrix
         cv += {n = a.Frequency(Scan0).Count, a.Frequency.Select(Function(x) x.Count).Sum - CInt(n)}
         cv += {n = b.Frequency(Scan0).Count, b.Frequency.Select(Function(x) x.Count).Sum - CInt(n)}
 
-        Dim out As chisqTestResult = stats.chisqTest(matrix(c(Of Integer)(cv), nrow:=2))
+        Dim out As chisqTestResult = stats.chisqTest(base.matrix(c(Of Integer)(cv), nrow:=2))
         Return out
     End Function
 
@@ -110,7 +104,7 @@ Public Module TestMatrix
             b% = db.__getCount(x),
             c% = da.__getCount(y),
             d% = db.__getCount(y)
-        Dim array$ = matrix({a, c, b, d}, nrow:=2)
+        Dim array$ = base.matrix({a, c, b, d}, nrow:=2)
         Dim out As chisqTestResult = stats.chisqTest(x:=array)
 
         Return (x, y, a, b, c, d, out)
@@ -165,7 +159,7 @@ Public Module TestMatrix
         End If
 
         ' 使用R之中的chisq.test函数进行检验
-        Dim array$ = matrix(data:=vec, nrow:=3)
+        Dim array$ = base.matrix(data:=vec, nrow:=3)
         Dim out As chisqTestResult = stats.chisqTest(x:=array)
         Dim counts = (a, b, c, d, e, f, g, h)
 
@@ -263,7 +257,7 @@ Public Module TestMatrix
         '
         ' out <- chisq.test(mat);
 
-        Dim out As chisqTestResult = stats.chisqTest(matrix(c(Of Integer)(cv.ToArray), nrow:=2))
+        Dim out As chisqTestResult = stats.chisqTest(base.matrix(c(cv.ToArray), nrow:=2))
 
         Return New NamedValue(Of chisqTestResult) With {
             .Name = $"{a}/{b}",
