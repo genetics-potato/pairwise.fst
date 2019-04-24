@@ -155,7 +155,8 @@ Module CLI
                 .ID = file.BaseName
             }
 
-            For Each pair As Tuple(Of String, String) In combs  ' pops combination
+            ' pops combination
+            For Each pair As Tuple(Of String, String) In combs
                 If Not hash.ContainsKey(pair.Item1) OrElse
                     Not hash.ContainsKey(pair.Item2) Then
                     Exit For
