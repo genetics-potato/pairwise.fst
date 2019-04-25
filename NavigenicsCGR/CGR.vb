@@ -40,20 +40,24 @@ Public Module CGR
     End Function
 
     ''' <summary>
-    ''' 
+    ''' Calculate combined genetic risk
     ''' </summary>
     ''' <param name="RR"></param>
     ''' <param name="frequency"></param>
-    ''' <param name="genotypes$"></param>
+    ''' <param name="genotype"></param>
     ''' <returns>Risk FoldChange result</returns>
     <Extension>
     Public Function CalculateCGR(RR As IEnumerable(Of DataSet),
                                  frequency As IEnumerable(Of DataSet),
-                                 genotypes$()) As Double
+                                 genotype As Genotype) As Double
 
-        Dim weights = RR.WeightValue(frequency, genotypes)
+        Dim weights = RR.WeightValue(frequency, genotype.combination)
         Dim totalWeight = weights.Values.ProductALL
-        Dim actualRR = RR.Select(Function(marker) marker(marker("genotype"))).ProductALL
+        Dim actualRR As Double = RR _
+            .Select(Function(marker)
+                        Return marker(genotype.Markers(marker.ID))
+                    End Function) _
+            .ProductALL
         Dim CGR# = actualRR / totalWeight
 
         Return CGR
