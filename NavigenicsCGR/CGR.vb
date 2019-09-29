@@ -55,7 +55,7 @@ Public Module CGR
         Dim totalWeight = weights.Values.ProductALL
         Dim actualRR As Double = RR _
             .Select(Function(marker)
-                        Return marker(genotype.Markers(marker.ID))
+                        Return marker(genotype.Markers(marker.ID).Name) * genotype.Markers(marker.ID).Value
                     End Function) _
             .ProductALL
         Dim CGR# = actualRR / totalWeight

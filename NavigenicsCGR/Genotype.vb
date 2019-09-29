@@ -1,4 +1,6 @@
-﻿Public Class Genotype
+﻿Imports Microsoft.VisualBasic.ComponentModel.DataSourceModel
+
+Public Class Genotype
 
     ''' <summary>
     ''' AA/AB/BB, ABC/ABB... etc
@@ -9,6 +11,6 @@
     ''' The markers genotype
     ''' </summary>
     ''' <returns></returns>
-    Public Property Markers As Dictionary(Of String, String)
+    Public Property Markers As Dictionary(Of String, NamedValue(Of Double))
 
 End Class
