@@ -49,13 +49,18 @@ Public Module CGR
     <Extension>
     Public Function CalculateCGR(RR As IEnumerable(Of DataSet),
                                  frequency As IEnumerable(Of DataSet),
-                                 genotype As Genotype) As Double
+                                 genotype As Genotype,
+                                 Optional naive As Boolean = True) As Double
 
         Dim weights = RR.WeightValue(frequency, genotype.combination)
         Dim totalWeight = weights.Values.ProductALL
         Dim actualRR As Double = RR _
             .Select(Function(marker)
-                        Return marker(genotype.Markers(marker.ID).Name) * genotype.Markers(marker.ID).Value
+                        If naive Then
+                            Return marker(genotype.Markers(marker.ID).Name)
+                        Else
+                            Return marker(genotype.Markers(marker.ID).Name) * genotype.Markers(marker.ID).Value
+                        End If
                     End Function) _
             .ProductALL
         Dim CGR# = actualRR / totalWeight
